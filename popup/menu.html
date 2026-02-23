@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link id="cssPath" rel="stylesheet" href="menu.css"/>
+  </head>
+
+<body>
+  <div class="pageWrap">
+    <div class="row">
+      <div id="notify" class="msg">&nbsp;</div>
+    </div>
+    <div class="row rowFll" style="margin-bottom: 12px;">
+      <button id="clrMdId" act="clrMd" type="submit" >light/dark</button>
+      <input id="atFllId" act="tglAtFll" class="tgglBtn" type="checkbox" />
+      <label act="tglAtFll" class="tgglBtn" for="atFllId">autofill</label>
+    </div>
+    <div class="row rowCntr" style="background-color: #888888; color: black; border-radius: 4px;">
+      <div id="dmn" class="lbl" >loading...</div>
+    </div>
+    <div id="dmnTypes" class="row rowFll" style="margin-bottom: 16px;" >
+      <input id="dmnTypeIgnr" act="addDmnIgnr" class="tgglBtn" type="checkbox" />
+      <label act="addDmnIgnr" class="tgglBtn" for="dmnTypeIgnr">ignore</label>
+      <input id="dmnTypeApply" act="addDmnApply" class="tgglBtn" type="checkbox" />
+      <label act="addDmnApply" class="tgglBtn" for="dmnTypeApply">apply</label>
+    </div>
+    <div class="row rowRght" style="margin-bottom: 3px;" >
+      <div style="margin-right: 6px;">selected profile: </div><select id="prflSlct" act="setPgPrfl" class="prflSlctDmn"></select>
+    </div>
+    <div class="row rowRght" style="margin-bottom: 10px;">
+      <label for="curDefId" style="border: none;">keep selected:</label>
+      <input id="curDefId" act="tglCurDef" class="tgglBtn" type="checkbox" style="display: flex;" />
+    </div>
+    <div class="row" style="margin-bottom: 15px; padding-top: 8px; border-top: 1px solid #888888; justify-content: space-between;">
+      <input id="fPnlId" act="fPnl" class="tgglBtn" type="checkbox" />
+      <label act="fPnl" class="tgglBtn" for="fPnlId">quick copy panel</label>
+      <input id="hvrId" act="tglHvr" class="tgglBtn" type="checkbox" />
+      <label act="tglHvr" class="tgglBtn" for="hvrId">hover</label>
+    </div>
+    <div class="row rowRght" style="margin-bottom: 0px;">
+      <label for="evntFllId" style="border: none;">event fill:</label>
+      <input id="evntFllId" act="tglEvntFll" class="tgglBtn" type="checkbox" style="display: flex;" />
+    </div>
+    <div class="row" style="margin-top: 4px; justify-content: flex-end;">
+      <button id="btnFllId" act="fill" >fill form</button>
+    </div>
+    <div class="row" style="justify-content: flex-end; margin-top: 6px;">
+    <a href="" id="settingsPage">Settings</a>
+    </div>
+    <div class="row" style="justify-content: flex-end; margin-bottom: 0px;">
+    <a href="https://b3spage.sourceforge.io/index.html?sara" id="donate">About/Donate</a><br>
+    </div>
+  </div>
+  <script src="menu.js"> </script>
+</body>
+
+</html>

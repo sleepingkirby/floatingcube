@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link id="cssPath" rel="stylesheet" href="./settings.css"/>
+  </head>
+
+  <body>
+    <div class="pageWrap">
+      <div id="msgPrfl">&nbsp;</div>
+      <div class="switch">
+        <input type="radio" name="switchTab" class="swtchTb" tabMain="prflMain" id="prflInpt" checked />
+        <label for="prflInpt">
+          <div id="profile">
+          Profile
+          </div>
+        </label>
+  
+        <input type="radio" name="switchTab" class="swtchTb" tabMain="imprtMain" id="imprtInpt" />
+        <label for="imprtInpt">
+          <div id="import">
+          Import/Export
+          </div>
+        </label>
+
+        <input type="radio" name="switchTab" class="swtchTb" tabMain="sttngsMain" id="sttngsInpt" />
+        <label for="sttngsInpt">
+          <div id="settings">
+          Settings
+          </div>
+        </label>
+
+        <input type="radio" name="switchTab" class="swtchTb" tabMain="abtMain" id="abtInpt" />
+        <label for="abtInpt">
+          <div id="about">
+          Help/About
+          </div>
+        </label>
+      </div>
+      <div class="main mainOn" id="prflMain">
+        <div class="prflSlct">
+          <div>
+            <div class="prflLbl">
+            Profile:
+            </div> 
+            <select id="prflSlct" act="updtDrwPrfl">
+            </select>
+            <input id="prflDflt" type="checkbox" />
+            <label act="newDflt" for="prflDflt" forel="prflSlct" />
+          </div>
+
+          <div>
+            <div class="prflAdd">
+            <input id="newPrflInpt" type="text" placeholder="new profile name" />
+            <button act="newPrfl" forel="newPrflInpt">+</button>
+            </div>
+            <button id="delPrfl" act="delPrfl" forel="prflSlct">x</button>
+          </div>
+        </div>
+        <div id="prflNewFrm">
+          <div class="prflNewTtl">
+          add field:
+          </div>
+          <div class="prflNewInpt">
+          <input name="new[categ]" type="text" placeholder="category" />
+          </div>
+          <div class="prflNewInpt">
+          <input name="new[patt1]" type="text" placeholder="matching name 1" />
+          </div>
+          <div class="prflNewInpt">
+          <input name="new[patt2]" type="text" placeholder="matching name 2" />
+          </div>
+          <div class="prflNewInpt">
+          <input name="new[patt3]" type="text" placeholder="matching name 3" />
+          </div>
+          <div class="prflNewInpt">
+          <input name="new[val]" type="text" placeholder="text to filled" />
+          </div>
+          <button act="newFld" forel="prflNewFrm" id="prflNewAdd">+</button>
+        </div>
+        <div id="prflFrm">
+         &nbsp;
+        </div>
+      </div>
+      <div class="main" id="imprtMain">
+        <div>You can export/backup your extension settings by clicking export. You can also paste the settings into the box below and click "import" to import/restore any backed up settings.</div>
+        <textarea id="imprtTA" placeholder="Settings exported or to be imported here..."></textarea>
+        <div class="ctrl">
+          <button act="imprtClr" forel="imprtTA" class="clear">clear</button>
+          <button act="imprtExprt" forel="imprtTA" class="export">export</button>
+          <button act="imprtImprt" forel="imprtTA" class="import">import</button>
+        </div>
+      </div>
+      <div class="main" id="sttngsMain">
+        <div class="chckBs clrMd">
+          <input id="clrMd" act="setColorMode" name="colormode" type="checkbox" />Light Mode
+        </div>
+        <div class="chckBs">
+          <input id="autoFll" act="setAutoFill" name="autofill" type="checkbox" />Auto Fill
+        </div>
+        <div class="chckBs">
+          <input id="evntFll" act="setEvntFill" name="evntfill" type="checkbox" />Event Fill
+        </div>
+        <div class="chckBs">
+          <input id="hvrId" act="setHoverId" name="hoverid" type="checkbox" />Floating ID box
+        </div>
+        <div class="chckBs">
+          <input id="curDef" act="setCurDef" name="curdef" type="checkbox" /> Keep profile on current even in new tabs
+        </div>
+        <div class="sttngsTA">
+          <div class="sttngsTtl">Ignore List: (applies when autofill is on)</div>
+          <textarea id="ignrLst" act="sttngsIgnrLst" placeholder="e.g. youtube.com"></textarea>
+        </div>
+        <div class="sttngsTA">
+          <div class="sttngsTtl">Apply List: (applies when autofill if off)</div>
+          <textarea id="applyLst" act="sttngsApplyLst" placeholder="e.g. domain host|profile name"></textarea>
+        </div>
+      </div>
+      <div class="main" id="abtMain" style="padding-left: 16px;">
+        <div class="text">
+          <div class="version">Version: 1.7</div>
+          <div class="version">*WARNING: DO NOT SAVE PASSWORDS INTO THIS PROGRAM. IT IS NOT MEANT FOR ANY DATA THAT ARE MEANT TO BE ENCRYPTED. IF IT IS INFO YOU DON'T FEEL COMFORTABLE IN SHARING WITH JOB RECRUITERS, INTERVIEWERS OR THE HR DEPARTMENT OF ANOTHER COMPANY, DO NOT SAVE IT HERE.*</div>
+          <div class="title">How to use: </div>
+          <div class="body">
+          SARA lets you set up profiles and pre-enter information for web forms.  The default profile is set up for job applications, but you can create multiple profiles and use any of them as your default.  SARA looks for patterns in webform elements and fields that can then be matched to an element in your profile.
+          </div>
+          
+          <div class="body">
+          The <span class="hlId" act="hlId" for="profile">profile</span> tab is where you'll enter your resume (or other webform input) details. Review the existing template and add/remove fields as needed for your most commonly used job sites.
+          </div>
+
+          <div class="body">
+          <span class="hlId" act="hlId" for="import">Import/Export</span> is to create a backup of your settings and details.  Click Export to create a text file of your settings that can later be imported if needed.
+          </div>
+            
+          <div class="body">
+          Selecting "<span class="keyword">Auto Fill</span>" on the <span class="hlId" act="hlId" for="settings">Settings</span> tab will automatically fill in any webform on a page that you load. 
+          </div>
+
+          <div class="body">
+          Also in Settings, selecting "<span class="keyword">Floating ID box</span>" will give you a hover window with details on any element or field on a webpage that you mouse over.  This option can help you set up new fields in your profile to match commonly used webform elements.  
+          </div>
+
+          <div class="body">
+          The "<span class="keyword">Ignore List</span>" will tell autofill which sites to NOT autofill. 
+          </div>
+
+          <div class="body">
+          The "<span class="keyword">Apply List</span>" will autofill listed sites even when "<span class="keyword">Auto Fill</span>" is turned off. 
+          </div> 
+
+          <div class="body">
+          The "<span class="keyword">Event List</span>" should be turned on by default. If this extension uses too much power or takes too long, you can try turning it off.
+          </div>
+
+          <div class="body">
+          For cases when autofill does not find a match for every field, or if it matched against different data, you can use the right-click menu to fill them. When filling the field this way, the value of the field will be copied into your clipboard as well.
+          </div>
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/rightclickmenu.png">
+          </div>
+
+          <div class="title" style="margin-top:42px;">How It Works: </div>
+          <div class="body">
+          This is the more advanced context for how all this works. If you want to do more than just fill out basic forms, definitely read this.
+          </div>
+          <div class="body">
+          Did you know, behind every field on a web form...
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/behind_every_field.png">
+          </div>
+          
+          <div class="body">
+          ...there's a bunch of information stored (property values) into it?
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/theres_a_bunch_of_properties.png">
+          </div>
+
+          <div class="body" style="font-weight: 900; margin: 20px 20px 50px 20px;">
+          *What this extension does, is takes "matching names" and tries to [partial] match them to any of these "property values". It can try to match to the same field with multiple "matching names" to find what value/text you really want to fill the field with.*
+          </div>
+          
+          <div class="body">
+          Don't worry if this sounds confusing now. We'll go through an example together.
+          </div>
+          
+          <div class="body" style="margin-top:10px;">
+          Let's say we want to match this "First Name" field. Looking at the properties of these fields, we'll just pick any one property at random. <b>"infoFirstName"</b> will do nicely because it's nice and descriptive of what this field is for. But also, there's a high likelihood that other forms of this type will name it similarly/have properties of a similar name.
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/lets_say_we_want_to_match_this.png">
+          </div>
+
+          <div class="body">
+          When you go into the settings of this extension, you should see something (or you can make) like this:
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/in_settings_you_can_see_or_make.png">
+          </div>
+
+          <div class="body">
+          If it's not obvious, here's what all these fields are:
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/these_are_category_matching_name.png">
+          </div>
+        
+          <div class="body">
+          As stated before, <b>this extension will try to take "matching names" and partial match them to any property value.</b> We've picked the property value of <b>"infoFirstName"</b>. <br> 1) So we'll have set <b>"matching name 1"</b> with <b>"name"</b> first. 2) And, under that, we'll set <b>"matching name 2"</b> with <b>"first"</b>. <br><br><b>*NOTE: Categories are not used for matching at all. They are there for your personal organization purposes.*</b>
+          </div>
+
+          <div class="body">
+          So you can imagine it like this:
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/so_itll_look_like_this.png">
+          </div>
+
+          <div class="body">
+          When the extension tries to see if this first name field is something it should fill, it'll try to match the word <b>"name"</b> first. And, if <b>"infoFirstName"</b> does have the word <b>"name"</b> in it, it'll try to see if "last", <b>"first"</b> or "full_name" is in the word <b>"infoFirstName"</b>. Since <b>"first"</b> is, the extension will see that you want to fill this field with the value/text <b>"Sam"</b>.
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/plugin_will_try_to_match_like_this.png">
+          </div>
+
+          <div class="body">
+          So now that this is set, we can go back to the form (might need to refresh the page if you newly added matching name and values) and through the <b>popup menu</b> of this extension, click <b>"fill form"</b>.
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/by_clicking_on_the_fill_form_button.png">
+          </div>
+
+          <div class="body">
+          And, as you can see, it found and filled out the first name field. It even tells you when it does this and how many fields it filled out (whether or not you can see them) for you.
+          </div>
+
+          <div class="body">
+          And that's basically how it works. There are other functions of course, an apply list so it'll automatically fill any forms on a specific domain, fill forms on all domains (autofill), don't fill out forms on specific domains when autofill is turned on, etc. But I'll leave you to play with them and see what you can do.
+          </div>
+
+          <div class="body" style="font-weight: 900;">
+          By the way, if you're wondering how you can find the property values of a field yourself without being a coder, it's right here:
+          </div>
+
+          <div class="pic" style="opacity:0.75;">
+          <img src="./pics/please_note_element_properties.png">
+          </div>
+
+          <div class="body">
+          That's the <b>"right click" menu</b> (context menu). Simply right click on a field and, under the <b>"SARA"</b>, go to <b>"Element Properties: &lt;something&gt;"</b>, and it will display all the properties and property values of that field.
+          </div>
+
+          <div class="body">
+          And that's that. If you have any further questions about the details of how it all works, it's likely that I've answered them in the FAQ below. I hope you're having a good time with this extension. And, if you're using this to fill out web forms for jobs, like I did, best of luck to you. It sucks, I know. The process can be dehumanizing. But know that someone out there thinks enough of you to help you along the way. Because, if I didn't, I wouldn't have released extension to the public.
+          </div>
+
+
+          <div class="title" style="margin-top:42px;">FAQ: </div>
+          <div class="qs">Q: Is it matching case sensitive or case insensitive?<br/>A: Case <span style="font-weight:bold">IN</span>sensitive. If there is enough demand for allowing users to set case sensitivity, I'll go back and add the feature.</div>
+          <div class="qs">Q: Why do you use "matching name" in one explanation and "pattern" in another?<br/>A: The "matching names" are actually, known to us programmers, regular expression patterns. If you have no idea what I'm talking about, don't worry about it. Not knowing understanding this will not diminish this extension's usefulness. I use "matching name" instead of pattern because it's more descriptive and informative for someone that doesn't know what "pattern" implies to programmers. With that said, I cover using regular expression later. (One liner. Don't get too excited.)</div>
+          <div class="qs">Q: What is "Event Fill"? What does it actually do?<br/>A: There are a significant amount of forms online that uses a lot of modern web elements. Some of which doesn't rely on the input field's actual value to read/set values for said field. (Yes, that sounds a little dumb. But if modern web forms were good, neither of us would be here.) Instead, they listen to javascript events to know when values have been changed or when it needs to be updated or used. By turning on "Event Fill", whenever this extension fills a value into a field, it'll also fire off a bunch (3) events from the field as it's filling it in to mimic events that would have been fired when a human would paste a value into that input field. Not all modern, event driven, troublesome forms may be fixed by this, but this should get most of them.</div>
+          <div class="qs">Q: <span style="font-weight:bold;">Should I make every pattern unique?</span><br/>A: <span style="font-weight:bold;">Yes, yes, a thousand times yes.</span> Though it is possible (though manual editting of the settings. This should not be possible via this interface.) to have duplicate patterns, it provides <span style="font-weight:bold;">no benefit for the user to have duplicate patterns.</span></div>
+          <div class="qs">Q: What if I want to make duplicates anyways?<br/>A: Sure, if you want. SARA should still work. But keep in mind that the search and fill functionality will probably not work as you intend it. See next question for explanation.</div>
+          <div class="qs">Q: If 2 patterns match the same field, which has priority/how is it prioritized?<br/>A: None. The data structure that holds the pattern has no explicit order or priority (search "Does JavaScript guarantee object property order?" if you want to know more). So if 2 patterns matches the same field, there's no guarantee that the same pattern will be used every time. As such, I <span style="font-weight:bold;">HIGHLY RECOMMEND THAT EVERY PATTERN BE UNIQUE.</span></div>
+          <div class="qs">Q: Why can't I auto fill those fields that asks you to attach a file/resume? <br/>A: This actually is a purposeful limitation of the browser. It's a security measure from the makers of the browser (both firefox and chrome do this) to prevent malicious scripts from uploading files from your computer to some other location without your knowledge. (there's a way, via javascript, to do a button click.)</div>
+          <div class="qs">Q: Why isn't there a way to auto click buttons? <br/>A: That would make this extension too close to a web form bot, which can be used maliciously. To avoid that, I've purposely not programmed that in.</div>
+          <div class="qs">Q: How do I do autofill for checkboxes?<br/>A: If the value for the pattern is anything but and empty value or the word "false", it'll check the box. Conversely, an empty value or the word "false" will <span style="font-weight:bold;">UNCHECK</span> the box.</div>
+          <div class="qs">Q: How do I do autofill for radio buttons?<br/>A: Since radios give you a list of options to only choose one of, if the value matches the values of one of the choices, that's the radio it'll select.</div>
+          <div class="qs">Q: What about drop downs?<br/>A: Same idea. If the value is an option in the drop down, it'll select it.</div>
+          <div class="qs">Q: What can't this auto fill?<br/>A: There's a few:
+            <ol>
+              <li>Custom-made fields. There's a thousand and one ways to make those. I have no good way to detect them.</li>
+              <li> Fields in iframes. Iframes are an older html element that essentially puts a webpage within a webpage. Nearly universally scorned by web developers, there shouldn't be many left that are of any interest. That said, if my assumption is incorrect and there's enough people that want it, I'd more than happy to implement it.</li>
+              <li>Multi-select lists. Code-wise, these are the same as dropdowns but with a single difference. They have the attribute "multiple". It'd be inaccurate to say that it won't fill a multi-select list as it definitely will, but it will only fill with 1 value as there is only one value allowed per pattern. The idea is, a pattern can match a text field on one page, but a multi-select on another. As such, we don't want an array of choices to be entered for page one so page two can have multiple options select.</li>
+            </ol>
+          </div>
+          <div class="qs">Q: When I press the "export" button in the "Import/Export" section, a bunch of code showed up! What is that all that? What do I do with it?<br/>A: That's a text presentation(JSON) for all the settings for the plugin. This way, in case you ever need to, you can transfer or back up all your settings, patterns and values for this extension. If you have a friend or colleague that also uses this extension, you can also share your settings.</div>
+          <div class="qs">Q: Can the patterns be regular expression?<br/>A: Yes, but it hasn't been fully tested. I forsee no functional problems with using regular expression patterns, but it may be possible to escape the HTML with regex values. (If you have no idea what any of this means, don't worry about it. It won't apply to you.)</div>
+          <div class="qs">Q: Everything's so dark? Is there a light mode?<br/>A: By default, I try to make all of my projects' colors and themes dark. Most people that I know that work on computers a lot prefer dark mode by default, myself included. If this is a hinderance to you, contact me and we can discuss what you need.</div>
+          <div class="qs">Q: Does this program track anything? Do you capture and/or send any personal data? <br/>A: No. I know a lot of cheap or free programs like to, but I hate that and have no interest in people's personal info or data. Though, since this is a google chrome extension, there may be some tracking through the chrome browser itself. But, as long as I'm in charge of this extension, there will be no user tracking/gathering of personal data/information.</div>
+          <div class="qs">Q: I found a bug/I would like to request a new feature! Where can I contact you?<br/>A: My contact information is in the "About" section below. Please keep in mind that any unsolicated advertisement or bulk business inquries will promptly be marked as spam and deleted.</div>
+          <div class="qs">Q: SARA is almost what I'm looking for. I just need a small tweak here or there. Can I talk to you about it?<br/>A: Yes! I'm okay with making personalized versions if the conditions are right. There are logistics involved so keep in mind I can't always say yes or no to the tweaks. But feel free to contact me about it.</div>
+          <div class="qs">Q: I like what you do so much I'd like to support you/I would like to donate some money. Is this possible?<br/>A: Yes. Feel free to join my <a href="https://blue3.locals.com" target="_blank">locals community</a>. If you're just looking for a one tme donation, I have <a href="https://ko-fi.com/blue3studios" target="_blank">ko-fi</a> and <a href="https://www.buymeacoffee.com/blue3" target="_blank">buy me a coffee</a> set up too.</div>
+          <div class="qs">Q: I like what you're doing. Can I commission you to make something for me? / I'm starting a project of my own. Can I hire you as a freelancer?<br/>A: Possibly, schedules and logistics permitting. Contact me and we can discuss it.</div>
+          
+          <div class="qs" style="border-top: 1px solid #888888; padding-top: 20px; margin-top: 16px;"><a href="https://b3spage.sourceforge.io/index.html?sara" target="_blank">About/Donate</a></div>
+        </div>
+      </div>
+    </div>
+  
+    <script src="./options.js"></script>
+  </body>
+</html>
