@@ -969,14 +969,91 @@ return true;
 }
 
 //================================================= main code run ====================================================
-var onEl=null;
-var ignErr=null;
-var ignrHsh={}; //hash for ignore list
-var applyHsh={}; //hash for apply list
-var isApply=false; //is this domain in apply list?
-var curPrfl=null; //profile name to apply for this page
-var curInpt=null;
-var dmn=window.location.host;//domain of current page/
+const dfltStrg={
+  'global':{
+  'enabled':true, //global enable switch
+  'onEvent':'click', //which event to update/redraw on.
+  'startVar':'SugarCube' //the name of the global variable to pull from. Most of what we care about is in SugarCube.State.active.variables
+  },
+  'profiles':{ //profiles to each game/page
+
+    'example':{
+      'match':{
+        'State.active.variables.author':{
+          'cond':'eq', //incl, not, regex, exist(the variable just exists)
+          'val':'Author name'
+        }
+      },
+
+      'watch':[
+        //Why are these arrays while all the others are dot strings? I'm going to have to .split() the dot strings anyways. Might as well save the CPU power when I can.
+        //RULE: ONLY WATCHES SCALAR VALUES. REASON BEING ARRAYS OR OBJECTS CAN GET TOO LONG TO DISPLAY.
+        ['State','active','variables','xp'], 
+        ['State','active','variables','money'] 
+      ],
+
+      'edit':{
+        'order':[
+          //order vars below should be display
+          //shallow representation of order of vars to edit for convenience. When in doubt, recalculate from vars.used
+          1,
+          0
+        ],
+        'vars':[
+          {
+          //RULE: ONLY SETS SCALAR VALUES. WILL NOT SET ENTIRE OBJECT OR ARRAYS TO DO COMPLEXITY AS WELL AS HOW DESTRUCTIVE IT CAN BE.
+          //Using array here because, save cpu power, but also, want the possibly of have 2 entires to the same variable. i.e. Money=100 and money=9999999
+          'path':['State','active','variables','money'],
+          'type':'number', //for the most part, use typeof to get the type. BUT typeof [] will always give 'object' and not 'array'. This is used to know what actions are valid.
+          'action':'set', //for now, only support set and add. set for scalar values like string and number. Add to do things like [].push or Object[indx]=val
+          'val':10000,
+          'indx':'indx', //used only for type=='object' when action=='set'
+          'used':0, //not really meant for human use. Used to keep track how many times this was used to determine order. Used to calculate edit.order
+          'ord':1 //shallow representation of the above for quick look up purposes. If wrong, re-calculate from 'used'
+          },
+          {
+          'path':['State','active','variables','type'],
+          'type':'string',
+          'action':'set',
+          'val':'electric',
+          'indx':'indx',
+          'used':0,
+          'ord':0
+          }
+        ],
+      },
+
+      //this should look almost exactly like edit. It's for values to edit that the user decides to keep on time and don't re-order
+      //all rules from edit applies
+      'bookmark':{
+        'order':[
+        0,
+        1
+        ],
+        'vars':[
+          {
+          'path':['State','active','variables','xp'],
+          'type':'number',
+          'action':'set',
+          'val':10000,
+          'indx':'indx',
+          'ord':0
+          },
+          {
+          'path':['State','active','variables','item',1],
+          'type':'string',
+          'action':'set',
+          'val':'potion',
+          'indx':'indx',
+          'ord':1
+          }
+        ]
+      }
+    },
+
+  }
+}
+
 /*
 window['extSARAVars']={
 onEl:null,
@@ -991,14 +1068,13 @@ dmn:window.location.host
 */
 
 document.addEventListener("mouseover", mouseOvrEvnt);
-document.addEventListener("contextmenu", rghtClckOnEl);
 
 browser.storage.local.get().then(function(d){
   if(Object.keys(d).length<=0){
-  console.log("SARA: No settings found. Not able to do anything. Reinstall recommended.");
-  return false;
+  console.log("floatingcube: No settings found. Initializing.");
   }
 
+/*
 //set the hashs for east access
 ignrHsh=strToHsh(d.settings.ignrLst);
 applyHsh=strToApplyLst(d.settings.applyLst);
@@ -1035,10 +1111,10 @@ floatPnlDt(d, d.settings.floatPnl, curPrfl);
     fillNMsg(d.profiles[curPrfl], "Apply List Fill\r\nFields Filled: ##num##\r\nProfile: "+curPrfl, d.settings.eventFill);
     }
   }
-
+*/
 
 //get message from other parts
-browser.runtime.onMessage.addListener(runOnMsg);
+//browser.runtime.onMessage.addListener(runOnMsg);
 });
 
 })();
