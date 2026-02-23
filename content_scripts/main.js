@@ -641,19 +641,9 @@ window.hasRun = true;
 
   /*---------------------------------------------------
   ---------------------------------------------------*/
-  function floatPnlDt(data, tgl, prfl){
-  var id="extIdNmSARAFPnl";
-  var ttlId="extIdNmSARAFPnlTtl";
-    if(!tgl){
-        data.settings['floatPnl']=false;
-          browser.storage.local.set(data).then((e)=>{
-          var el=document.getElementById(id);
-            if(el && el.nodeType){
-            document.body.removeChild(el);
-            }
-          });
-    return 1;
-    } 
+  function floatPnlDt(data, tgl){
+  var id="extIdNmFltCubeFPnl";
+  var ttlId="extIdNmFltCubeFPnlTtl";
 
     //if float panel is toggled, look to see if floating panel already exists, if so, do nothing
     var el=document.getElementById(id);
@@ -661,7 +651,6 @@ window.hasRun = true;
     return 0;
     }
 
-    data.settings['floatPnl']=true;
     browser.storage.local.set(data).then((e)=>{
     el=document.createElement("div");
     el.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; top: 0px; left: 75vw; opacity: 0.75; color:#AAAAAA; background-color:black; border-radius:6px; box-sizing: border-box; border: 1px solid #AAAAAA; width: calc(25vw - 20px); height: calc(100vh - 50px); max-width:75vw; max-height: calc(100vh - 20px); min-height: 50px; min-width: 180px; font-family: sans-serif; cursor: grab; position: fixed; z-index: 9999999; resize: both; overflow: hidden;";
@@ -691,19 +680,12 @@ window.hasRun = true;
     var cls=document.createElement("div");
     cls.style.cssText="display: flex;  border:1px solid #cccccc; margin: 4px 4px 4px 0px; padding: 2px 2px 2px 2px; border-radius: 6px; cursor: default;";
     cls.textContent='x';
-      cls.addEventListener("click", (e)=>{
-      data.settings['floatPnl']=false;
-        browser.storage.local.set(data).then((e)=>{
-        document.body.removeChild(el);
-        });
-      });
 
     hd.appendChild(ttl);
     hd.appendChild(cls);
 
     var bdy=document.createElement("div");
     bdy.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; border-radius:6px; padding: 6px 6px 6px 10px; box-sizing: border-box; overflow: auto; font-family: sans-serif; cursor: grab; width: 100%; height: 100%;";
-    bdy.innerHTML=trvrsDrwPrfl(data,prfl);
 
     el.appendChild(hd); 
     el.appendChild(bdy); 
@@ -973,6 +955,7 @@ const dfltStrg={
   'global':{
   'enabled':true, //global enable switch
   'onEvent':'click', //which event to update/redraw on.
+  'fltPnlTgl':false,
   'startVar':'SugarCube' //the name of the global variable to pull from. Most of what we care about is in SugarCube.State.active.variables
   },
   'profiles':{ //profiles to each game/page
@@ -1071,9 +1054,12 @@ document.addEventListener("mouseover", mouseOvrEvnt);
 
 browser.storage.local.get().then(function(d){
   if(Object.keys(d).length<=0){
-  console.log("floatingcube: No settings found. Initializing.");
+  console.log("floatingcube: No settings found. Initializing with default.");
+  d={ ...dfltStrg }
   }
 
+console.log(d);
+floatPnlDt(d,true);
 /*
 //set the hashs for east access
 ignrHsh=strToHsh(d.settings.ignrLst);
