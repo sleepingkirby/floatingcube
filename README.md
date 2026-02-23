@@ -1,3 +1,3 @@
-# SARA
+# floating cube 
 
-Web extension to allow for easy/automated fill in job application web forms.
+Web extension to look at/modify sugarcube variables
