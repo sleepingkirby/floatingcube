@@ -8,7 +8,7 @@
   return true;
   }
 window.hasRun = true;
-
+const plgInNm="floatingcube";
 
   //
   function onError(err){
@@ -895,6 +895,34 @@ setMsg(m);
 return true;
 }
 
+
+/*---------------------------------------------------
+pre: none
+post: element changed
+fill the profile select with profile names
+---------------------------------------------------*/
+function fillPrflSlct(obj=null,elId){
+const slct=document.getElementById(elId);
+  if(!slct){
+  console.log(`${plgInNm}: fillPrflSlct(): no element found with id "${elId}"`);
+  return null;
+  }
+
+  if(!obj||typeof obj!='object'||!obj.hasOwnProperty('profiles')||Object.keys(obj['profiles'])<=0){
+  console.log(`${plgInNm}: fillPrflSlct(): obj param has no profiles`);
+  return null;
+  }
+
+
+  for(const inx of Object.keys(obj['profiles'])){
+  const opt=document.createElement('option');
+  opt.value=inx;
+  opt.innerText=inx;
+  slct.appendChild(opt);
+  }
+
+}
+
 /*---------------------------------------------------
 pre:
 post:
@@ -1059,6 +1087,9 @@ const max=document.getElementById(`${id}MaxBtnId`);
     });
   }
 
+
+  //filling out profile select
+  fillPrflSlct(data,`${id}PrflSlct`); 
 }
 
 
