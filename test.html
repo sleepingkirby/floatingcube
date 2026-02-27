@@ -18,20 +18,28 @@ e.target.style.left=(pos.x+e.offsetX-setPosC.x)+"px";
 //e.target.style.top="100px";
 }
 
-function fPnlMin(){
+function fPnlMin(e){
 const id="fPnlLftPnl"
 const el=document.getElementById(id);
 el.style.maxWidth="0px";
+el.style.maxHeight="0px";
 el.style.padding="0px";
 document.getElementById("fPnlEdt").style.maxHeight="0px";
+document.getElementById("fPnlEdt").style.maxWidth="0px";
+e.style.display="none";
+e.nextElementSibling.style.display="flex";
 }
 
-function fPnlMax(){
+function fPnlMax(e){
 const id="fPnlLftPnl"
 const el=document.getElementById(id);
-el.style.maxWidth="800px";
+el.style.maxWidth="500px";
+el.style.maxHeight="500px";
 el.style.padding="0px 6px 16px 6px";
-document.getElementById("fPnlEdt").style.maxHeight="200px";
+document.getElementById("fPnlEdt").style.maxHeight="500px";
+document.getElementById("fPnlEdt").style.maxWidth="500px";
+e.style.display="none";
+e.previousElementSibling.style.display="flex";
 }
 
 </script>
@@ -52,37 +60,6 @@ border-radius: 4px;
 div{
 display: flex;
 padding:0px;
-}
-
-#fPnlId{
-position: fixed;
-left: 50vw;
-top: 30vh;
-border: 1px solid green;
-border-radius: 6px;
-background-color: black;
-box-sizing: border-box;
-flex-direction: column;
-z-index: 888888;
-display: flex;
-} 
-
-#fPnlId .head{
-z-index:9999999;
-background-color: black;
-flex-direction: row;
-justify-content: space-between;
-align-items: center;
-}
-
-#fPnlId .content{
-overflow: auto;
-padding: 4px 4px 4px 4px;
-box-sizing: border-box;
-display: flex;
-}
-
-#fPnlLftPnl{
 }
 
 #meas{
@@ -183,24 +160,24 @@ z<input type="radio" value="z" name="test">
 <button name="data">data</button>
 
 
-<div id="fPnlId" draggable="true" ondragstart="setPos1(event)" ondragend="setPos(event)">
-  <div class="head" style="margin-bottom:6px; overflow: hidden; justify-content:end;">
-    <div style="margin-left:6px; border:1px solid white; border-radius:2px; cursor:pointer;" onclick="fPnlMin(this)">⏷</div>
-    <div style="margin-left:6px; border:1px solid white; border-radius:2px; cursor:pointer;" onclick="fPnlMax(this)">⏶</div>
+<div id="fPnlId" style="border-color:#AAAAAA;position:fixed;left:50vw;top:30vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.82;" draggable="true" ondragstart="setPos1(event)" ondragend="setPos(event)">
+  <div class="head" style="margin-bottom:6px; border-radius:6px 6px 0px 0px;overflow: hidden; justify-content:end;">
+    <div id="fPnlMinBtnId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-radius:3px 0px 3px 3px; cursor:pointer;" onclick="fPnlMin(this)">⏷</div>
+    <div id="fPnlMaxBtnId" style="display:none; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-radius:3px 0px 3px 3px; cursor:pointer;" onclick="fPnlMax(this)">⏶</div>
   </div>
 
   <div class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
-    <div id="fPnlLftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px;">
-      <div style="align-items:center; width:100%; min-width:100px; border:1px solid white; border-radius:6px; box-sizing:border-box;">
+    <div id="fPnlLftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; max-height:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px;">
+      <div style="align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box;">
         <input type="text" id="fltCubeVarFltr" name="varFltr" style="width:100%; border:none;" placeholder="variable filter"/>
         <div style="margin:0px 0px 0px 6px;">🔎</div>
       </div>
       <div style="align-items:center; width:100%; min-width:100px; padding:4px 0px 4px 0px; box-sizing:border-box;" id="fPnlLftPnlPth">
-        <div style="border-bottom:1px solid white; font-size:smaller; flex-grow:2; box-sizing: border-box; padding:2px 4px 2px 4px;">
+        <div style="border-bottom:1px solid; font-size:smaller; flex-grow:2; box-sizing: border-box; padding:2px 4px 2px 4px;">
         State.active.variable
         </div>
       </div>
-      <div style="align-items:start; width:100%; min-width:100px; flex-direction:column; font-size: smaller;">
+      <div style="align-items:start; width:100%; min-width:100px; border-bottom:1px solid; margin-bottom:6px; flex-direction:column; font-size: smaller;">
         <div style>money</div>
         <div style>XP</div>
         <div style>Stats</div>
@@ -212,19 +189,35 @@ z<input type="radio" value="z" name="test">
         <div style="flex-direction:column; align-items:end; box-sizing:border-box;">
           <button name="edit" type="submit" style="display:flex;width:fit-content;" >Edit</button>
           <div id="fPnlPush">
-            <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid white;"><input type="text" name="fPnlIndx" style="border:none;width:100%;" placeholder="Index" title="For objects only" /></div>
+            <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;"><input type="text" name="fPnlIndx" style="border:none;width:100%;" placeholder="Index" title="For objects only" /></div>
             <button name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
           </div>
           <button name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
         </div>
       </div>
     </div>
-    <div class="rightPanel" style="border:1px solid blue;flex-direction:column; font-size:smaller; min-width:80px;">
+    <div class="rightPanel" style="border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; font-size:smaller; min-width:80px; padding-bottom:6px;">
       <div id="fPnlWatch" style="flex-direction:column;">
-        <div>Watch</div>
+        <div id="fPnlWatchTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Watch</div>
+        <div id="fPnlWatchEntrys" style="flex-direction:column; align-items:start; justify-content:start; padding:1px 2px;">
+          <div name="State.active.variable.xp" title="State.active.variable.xp">v.xp: 1000</div>
+          <div name="State.active.variable.money" title="State.active.variable.money">v.money: 1000</div>
+        </div>
       </div>
-      <div id="fPnlEdt" style="flex-direction:column; max-height:200px; overflow:hidden; transition: all 0.3s linear;">
-        <div>Edit</div>
+      <div id="fPnlEdt" style="flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; padding-bottom:12px; overflow:auto;resize:horizontal;box-sizing:border-box;">
+        <div id="fPnlEdtTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
+        <div id="fPnlEdtEntrys" style="flex-direction:column; align-items:start; justify-content:start; padding:1px 2px; width:100%; box-sizing:border-box;">
+          <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:start; width:100%;">
+            <button type="submit" name="fltcubeedtid.1" style="display:flex;width:fit-content;text-wrap:nowrap;">set v.xp</button>
+            <input type="text" name="fltcubeedtidval.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;" />
+            <button type="submit" name="fltcubeedtiddel.1" title="testignsfasdf" style="display:flex;width:fit-content;">x</button>
+          </div>
+          <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:start; width:100%;">
+            <button type="submit" name="fltcubeedtid.1" style="display:flex;width:fit-content;text-wrap:nowrap;">set v.xp</button>
+            <input type="text" name="fltcubeedtidval.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;" />
+            <button type="submit" name="fltcubeedtiddel.1" title="testignsfasdf" style="display:flex;width:fit-content;">x</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
