@@ -190,7 +190,7 @@ z<input type="radio" value="z" name="test">
   </div>
 
   <div class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
-    <div id="fPnlLftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; resize:both; overflow: auto; padding: 6px 6px 16px 6px;">
+    <div id="fPnlLftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px;">
       <div style="align-items:center; width:100%; min-width:100px; border:1px solid white; border-radius:6px; box-sizing:border-box;">
         <input type="text" id="fltCubeVarFltr" name="varFltr" style="width:100%; border:none;" placeholder="variable filter"/>
         <div style="margin:0px 0px 0px 6px;">🔎</div>
@@ -209,10 +209,13 @@ z<input type="radio" value="z" name="test">
         <div style="box-sizing:border-box;">
           <button name="watch" type="button" style="display:flex;" title="Add to watch list">Watch</button>
         </div> 
-        <div style="flex-direction:column; box-sizing:border-box;">
-          <button name="edit" type="button" style="display:flex;">Edit</button>
-          <button name="push" type="button" style="display:flex;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
-          <button name="pop" type="button" style="display:flex;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
+        <div style="flex-direction:column; align-items:end; box-sizing:border-box;">
+          <button name="edit" type="submit" style="display:flex;width:fit-content;" >Edit</button>
+          <div id="fPnlPush">
+            <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid white;"><input type="text" name="fPnlIndx" style="border:none;width:100%;" placeholder="Index" title="For objects only" /></div>
+            <button name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
+          </div>
+          <button name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
         </div>
       </div>
     </div>

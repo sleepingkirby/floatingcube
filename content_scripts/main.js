@@ -639,61 +639,6 @@ window.hasRun = true;
   }
 
 
-  /*---------------------------------------------------
-  ---------------------------------------------------*/
-  function floatPnlDt(data, tgl){
-  var id="extIdNmFltCubeFPnl";
-  var ttlId="extIdNmFltCubeFPnlTtl";
-
-    //if float panel is toggled, look to see if floating panel already exists, if so, do nothing
-    var el=document.getElementById(id);
-    if(el && el.nodeType){
-    return 0;
-    }
-
-    browser.storage.local.set(data).then((e)=>{
-    el=document.createElement("div");
-    el.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; top: 0px; left: 75vw; opacity: 0.75; color:#AAAAAA; background-color:black; border-radius:6px; box-sizing: border-box; border: 1px solid #AAAAAA; width: calc(25vw - 20px); height: calc(100vh - 50px); max-width:75vw; max-height: calc(100vh - 20px); min-height: 50px; min-width: 180px; font-family: sans-serif; cursor: grab; position: fixed; z-index: 9999999; resize: both; overflow: hidden;";
-    el.id=id;
-    el.draggable=true;
-
-      el.addEventListener("dragstart", (e)=>{
-      e.target.setAttribute("prevX", e.offsetX);
-      e.target.setAttribute("prevY", e.offsetY);
-      });
-      el.addEventListener("dragend", (e)=>{
-      var pos=e.target.getBoundingClientRect();
-      var prevX=e.target.getAttribute("prevX");
-      var prevY=e.target.getAttribute("prevY");
-      e.target.style.top=(pos.y+e.offsetY-prevY)+"px";
-      e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
-      });
-  
-    var hd=document.createElement("div");
-    hd.style.cssText="display:flex; flex-direction:row; justify-content: stretch; align-items: stretch;";
- 
-    var ttl=document.createElement("div");
-    ttl.style.cssText="display: flex; flex-direction: row; justify-content: flex-start; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 10; font-weight: 900; padding: 0px 4px 0px 6px;";
-    ttl.id=ttlId;
-    ttl.textContent="Quick Copy Panel";
-    
-    var cls=document.createElement("div");
-    cls.style.cssText="display: flex;  border:1px solid #cccccc; margin: 4px 4px 4px 0px; padding: 2px 2px 2px 2px; border-radius: 6px; cursor: default;";
-    cls.textContent='x';
-
-    hd.appendChild(ttl);
-    hd.appendChild(cls);
-
-    var bdy=document.createElement("div");
-    bdy.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; border-radius:6px; padding: 6px 6px 6px 10px; box-sizing: border-box; overflow: auto; font-family: sans-serif; cursor: grab; width: 100%; height: 100%;";
-
-    el.appendChild(hd); 
-    el.appendChild(bdy); 
-
-    document.body.appendChild(el);
-    });
-  }
-
 
   /*--------------------------------------------------------
   pre:
@@ -785,7 +730,7 @@ window.hasRun = true;
   ----------------------------------------------------------*/
   function setMsg(msg){
 
-  var sty=document.createElement("style");
+  const sty=document.createElement("style");
   sty.type="text/css";
   sty.className="extIdNmSARAMsgSty";
   sty.textContent="@keyframes extIdNmSARAMsgStyAni{0%{opacity:0.85;}100%{opacity:0;}}";
@@ -823,7 +768,7 @@ window.hasRun = true;
   post sets element with id "id" with content of str
   ---------------------------*/
   function setFPnlMsg(str){
-  var id="extIdNmSARAFPnlTtl";
+  const id="extIdNmSARAFPnlTtl";
   document.getElementById(id).textContent=str;
   return 0;
   }
@@ -950,6 +895,70 @@ setMsg(m);
 return true;
 }
 
+
+/*---------------------------------------------------
+pre:
+post:
+---------------------------------------------------*/
+function floatPnlDt(data, tgl){
+var id="extIdNmFltCubeFPnl";
+var ttlId="extIdNmFltCubeFPnlTtl";
+
+//if float panel is toggled, look to see if floating panel already exists, if so, do nothing
+var el=document.getElementById(id);
+  if(el && el.nodeType){
+  return 0;
+  }
+
+  browser.storage.local.set(data).then((e)=>{
+  el=document.createElement("div");
+  el.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; top: 0px; left: 75vw; opacity: 0.75; color:#AAAAAA; background-color:black; border-radius:6px; box-sizing: border-box; border: 1px solid #AAAAAA; width: calc(25vw - 20px); height: calc(100vh - 50px); max-width:75vw; max-height: calc(100vh - 20px); min-height: 50px; min-width: 180px; font-family: sans-serif; cursor: grab; position: fixed; z-index: 9999999; resize: both; overflow: hidden;";
+  el.id=id;
+  el.draggable=true;
+
+    el.addEventListener("dragstart", (e)=>{
+    e.target.setAttribute("prevX", e.offsetX);
+    e.target.setAttribute("prevY", e.offsetY);
+    });
+    el.addEventListener("dragend", (e)=>{
+    var pos=e.target.getBoundingClientRect();
+    var prevX=e.target.getAttribute("prevX");
+    var prevY=e.target.getAttribute("prevY");
+    e.target.style.top=(pos.y+e.offsetY-prevY)+"px";
+    e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
+    });
+
+  var hd=document.createElement("div");
+  hd.style.cssText="display:flex; flex-direction:row; justify-content: stretch; align-items: stretch;";
+
+  var ttl=document.createElement("div");
+  ttl.style.cssText="display: flex; flex-direction: row; justify-content: flex-start; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 10; font-weight: 900; padding: 0px 4px 0px 6px;";
+  ttl.id=ttlId;
+  ttl.textContent="Quick Copy Panel";
+  
+  var cls=document.createElement("div");
+  cls.style.cssText="display: flex;  border:1px solid #cccccc; margin: 4px 4px 4px 0px; padding: 2px 2px 2px 2px; border-radius: 6px; cursor: default;";
+  cls.textContent='x';
+  cls.addEventListener("click", function(e){
+    el.remove();
+  });
+
+  hd.appendChild(ttl);
+  hd.appendChild(cls);
+
+  var bdy=document.createElement("div");
+  bdy.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; border-radius:6px; padding: 6px 6px 6px 10px; box-sizing: border-box; overflow: auto; font-family: sans-serif; cursor: grab; width: 100%; height: 100%;";
+
+  el.appendChild(hd); 
+  el.appendChild(bdy); 
+
+  document.body.appendChild(el);
+  });
+}
+
+
+
+
 //================================================= main code run ====================================================
 const dfltStrg={
   'global':{
@@ -1050,7 +1059,7 @@ dmn:window.location.host
 }
 */
 
-document.addEventListener("mouseover", mouseOvrEvnt);
+//document.addEventListener("mouseover", mouseOvrEvnt);
 
 browser.storage.local.get().then(function(d){
   if(Object.keys(d).length<=0){
