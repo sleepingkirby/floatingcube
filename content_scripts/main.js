@@ -895,65 +895,170 @@ setMsg(m);
 return true;
 }
 
-
 /*---------------------------------------------------
 pre:
 post:
 ---------------------------------------------------*/
 function floatPnlDt(data, tgl){
-var id="extIdNmFltCubeFPnl";
-var ttlId="extIdNmFltCubeFPnlTtl";
+const id="extIdNmFltCubeFPnl";
+
+const html=`
+  <div class="head" style="margin-bottom:6px; border-radius:6px 6px 0px 0px;overflow: hidden; justify-content:flex-end;">
+    <div id="${id}MinBtnId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px 3px 3px 3px; cursor:pointer;">⏷</div>
+    <div id="${id}MaxBtnId" style="display:none; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px 3px 3px 3px; cursor:pointer;">⏶</div>
+    <div id="${id}ClsId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-radius:3px 0px 3px 3px; cursor:pointer; padding:0px 3px 0px 3px;" >x</div>
+  </div>
+
+  <div class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
+    <div id="${id}LftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; max-height:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px; width:180px;">
+      <div style="align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box;">
+        <input type="text" id="fltCubeVarFltr" name="varFltr" style="width:100%; border:none;" placeholder="variable filter"/>
+        <div style="margin:0px 0px 0px 6px;">🔎</div>
+      </div>
+      <div style="align-items:center; width:100%; min-width:100px; padding:4px 0px 4px 0px; box-sizing:border-box;" id="${id}LftPnlPth">
+        <div style="border-bottom:1px solid; font-size:smaller; flex-grow:2; box-sizing: border-box; padding:2px 4px 2px 4px;">
+        State.active.variable
+        </div>
+      </div>
+      <div style="align-items:flex-start; width:100%; min-width:100px; border-bottom:1px solid; margin-bottom:6px; flex-direction:column; font-size: smaller;">
+        <div style>money</div>
+        <div style>XP</div>
+        <div style>Stats</div>
+      </div>
+      <div style="align-items:flex-start; justify-content:space-between; width:100%; min-width:100px;  font-size: smaller;">
+        <div style="box-sizing:border-box;">
+          <button name="watch" type="button" style="display:flex;" title="Add to watch list">Watch</button>
+        </div> 
+        <div style="flex-direction:column; align-items:flex-end; box-sizing:border-box;">
+          <button name="edit" type="submit" style="display:flex;width:fit-content;" >Edit</button>
+          <div id="${id}Push">
+            <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;"><input type="text" name="${id}Indx" style="border:none;width:100%;" placeholder="Index" title="For objects only" /></div>
+            <button name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
+          </div>
+          <button name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
+        </div>
+      </div>
+    </div>
+    <div class="${id}RghtPnl" style="border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
+      <div id="${id}Watch" style="flex-direction:column;">
+        <div id="${id}WatchTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Watch</div>
+        <div id="${id}WatchEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
+          <div name="State.active.variable.xp" title="State.active.variable.xp">v.xp: 1000</div>
+          <div name="State.active.variable.money" title="State.active.variable.money">v.money: 1000</div>
+        </div>
+      </div>
+      <div id="${id}Edt" style="flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
+        <div id="${id}EdtTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
+        <div id="${id}EdtEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
+          <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
+            <button type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">set v.xp</button>
+            <input type="text" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;" />
+            <button type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
+          </div>
+          <div name="state.active.variable.money" title="state.active.variable.money" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
+            <button type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">push v.money</button>
+            <input type="text" name="fltCubeEdtIdIndx.1" placeholder="indx" style="display:flex;width:fit-content;flex-grow:1;min-width:60px;width:60px;" />
+            <input type="number" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;width:100px;" />
+            <button type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
+          </div>
+          <div name="state.active.variable.events" title="state.active.variable.events" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
+            <button type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">pop v.events</button>
+            <div style="display:flex; flex-grow:2;">&nbsp;</div>
+            <button type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
+          </div>
+        </div>
+      </div>
+      <div id="${id}RghtPnlSpcr" style="display:flex; flex-grow:1;">
+        &nbsp;
+      </div>
+      <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
+        <div style="">
+          <button style="box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;">+</button>
+          <input type="text" placeholder="testing" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 3px 3px 0px 0px;"/>
+        </div>
+        <select id="${id}PrflSlct" style="border-radius:3px 3px 6px 3px; border-left:1px solid; border-top:1px solid; border-bottom:0px; border-right:0px;">
+          <option value="">none</option>
+        </select>
+      </div>
+    </div>
+  </div>`;
+
 
 //if float panel is toggled, look to see if floating panel already exists, if so, do nothing
-var el=document.getElementById(id);
+let el=document.getElementById(id);
   if(el && el.nodeType){
   return 0;
   }
 
-  browser.storage.local.set(data).then((e)=>{
-  el=document.createElement("div");
-  el.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; top: 0px; left: 75vw; opacity: 0.75; color:#AAAAAA; background-color:black; border-radius:6px; box-sizing: border-box; border: 1px solid #AAAAAA; width: calc(25vw - 20px); height: calc(100vh - 50px); max-width:75vw; max-height: calc(100vh - 20px); min-height: 50px; min-width: 180px; font-family: sans-serif; cursor: grab; position: fixed; z-index: 9999999; resize: both; overflow: hidden;";
-  el.id=id;
-  el.draggable=true;
+//<div id="fPnlId" style="border-color:#AAAAAA;position:fixed;left:50vw;top:30vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.82;" draggable="true" ondragstart="setPos1(event)" ondragend="setPos(event)">
 
-    el.addEventListener("dragstart", (e)=>{
-    e.target.setAttribute("prevX", e.offsetX);
-    e.target.setAttribute("prevY", e.offsetY);
-    });
-    el.addEventListener("dragend", (e)=>{
-    var pos=e.target.getBoundingClientRect();
-    var prevX=e.target.getAttribute("prevX");
-    var prevY=e.target.getAttribute("prevY");
-    e.target.style.top=(pos.y+e.offsetY-prevY)+"px";
-    e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
-    });
+el=document.createElement("div");
+el.style.cssText="border-color:#AAAAAA;position:fixed;left:50vw;top:30vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.82;";
+el.id=id;
+el.draggable=true;
 
-  var hd=document.createElement("div");
-  hd.style.cssText="display:flex; flex-direction:row; justify-content: stretch; align-items: stretch;";
-
-  var ttl=document.createElement("div");
-  ttl.style.cssText="display: flex; flex-direction: row; justify-content: flex-start; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 10; font-weight: 900; padding: 0px 4px 0px 6px;";
-  ttl.id=ttlId;
-  ttl.textContent="Quick Copy Panel";
-  
-  var cls=document.createElement("div");
-  cls.style.cssText="display: flex;  border:1px solid #cccccc; margin: 4px 4px 4px 0px; padding: 2px 2px 2px 2px; border-radius: 6px; cursor: default;";
-  cls.textContent='x';
-  cls.addEventListener("click", function(e){
-    el.remove();
+  el.addEventListener("dragstart", (e)=>{
+  e.target.setAttribute("prevX", e.offsetX);
+  e.target.setAttribute("prevY", e.offsetY);
+  });
+  el.addEventListener("dragend", (e)=>{
+  const pos=e.target.getBoundingClientRect();
+  const prevX=e.target.getAttribute("prevX");
+  const prevY=e.target.getAttribute("prevY");
+  e.target.style.top=(pos.y+e.offsetY-prevY)+"px";
+  e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
   });
 
-  hd.appendChild(ttl);
-  hd.appendChild(cls);
+el.innerHTML=html;
 
-  var bdy=document.createElement("div");
-  bdy.style.cssText="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; border-radius:6px; padding: 6px 6px 6px 10px; box-sizing: border-box; overflow: auto; font-family: sans-serif; cursor: grab; width: 100%; height: 100%;";
+document.body.appendChild(el);
 
-  el.appendChild(hd); 
-  el.appendChild(bdy); 
+//setting close button
+const cls=document.getElementById(`${id}ClsId`)
+  if(cls){
+    cls.addEventListener('click', (e)=>{
+    document.body.removeChild(el);
+    });
+  }
 
-  document.body.appendChild(el);
-  });
+//min button
+const min=document.getElementById(`${id}MinBtnId`);
+  if(min){
+    min.addEventListener('click',(e)=>{
+    const lft=document.getElementById(`${id}LftPnl`);
+    lft.style.maxWidth="0px";
+    lft.style.maxHeight="0px";
+    lft.style.padding="0px";
+    const edt=document.getElementById(`${id}Edt`);
+    edt.style.maxHeight='0px';
+    edt.style.maxWidth='0px';
+    e.target.style.display='none';
+    e.target.nextElementSibling.style.display="flex";
+    const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
+    prflRow.style.maxWidth='0px';
+    prflRow.style.maxHeight='0px';
+    });
+  }
+
+//max button
+const max=document.getElementById(`${id}MaxBtnId`);
+  if(max){
+    max.addEventListener('click',(e)=>{
+    const lft=document.getElementById(`${id}LftPnl`);
+    lft.style.maxWidth="500px";
+    lft.style.maxHeight="500px";
+    lft.style.padding="0px 6px 16px 6px";
+    const edt=document.getElementById(`${id}Edt`);
+    edt.style.maxHeight='500px';
+    edt.style.maxWidth='500px';
+    e.target.style.display='none';
+    e.target.previousElementSibling.style.display="flex";
+    const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
+    prflRow.style.maxWidth='300px';
+    prflRow.style.maxHeight='80px';
+    });
+  }
+
 }
 
 
@@ -1067,7 +1172,6 @@ browser.storage.local.get().then(function(d){
   d={ ...dfltStrg }
   }
 
-console.log(d);
 floatPnlDt(d,true);
 /*
 //set the hashs for east access
