@@ -1,0 +1,234 @@
+<html>
+<head>
+<script>
+
+var setPosC=[];
+setPosC['y']=0;
+
+function setPos1(e){
+setPosC.y=e.offsetY;
+setPosC.x=e.offsetX;
+}
+
+function setPos(e){
+var pos=e.target.getBoundingClientRect();
+
+e.target.style.top=(pos.y+e.offsetY-setPosC.y)+"px";
+e.target.style.left=(pos.x+e.offsetX-setPosC.x)+"px";
+//e.target.style.top="100px";
+}
+
+function fPnlMin(){
+const id="fPnlLftPnl"
+const el=document.getElementById(id);
+el.style.maxWidth="0px";
+el.style.padding="0px";
+document.getElementById("fPnlEdt").style.maxHeight="0px";
+}
+
+function fPnlMax(){
+const id="fPnlLftPnl"
+const el=document.getElementById(id);
+el.style.maxWidth="800px";
+el.style.padding="0px 6px 16px 6px";
+document.getElementById("fPnlEdt").style.maxHeight="200px";
+}
+
+</script>
+
+<style>
+body{
+background-color: black;
+color: #cccccc;
+}
+
+input,textarea, select{
+background-color: black;
+color: #cccccc;
+border: 1px solid #cccccc;
+border-radius: 4px;
+}
+
+div{
+display: flex;
+padding:0px;
+}
+
+#fPnlId{
+position: fixed;
+left: 50vw;
+top: 30vh;
+border: 1px solid green;
+border-radius: 6px;
+background-color: black;
+box-sizing: border-box;
+flex-direction: column;
+z-index: 888888;
+display: flex;
+} 
+
+#fPnlId .head{
+z-index:9999999;
+background-color: black;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+}
+
+#fPnlId .content{
+overflow: auto;
+padding: 4px 4px 4px 4px;
+box-sizing: border-box;
+display: flex;
+}
+
+#fPnlLftPnl{
+}
+
+#meas{
+position: absolute;
+left: 200px;
+top: 200px;
+width: 10px;
+height: 10px;
+border: 1px solid blue;
+background-color: #222222;
+}
+.header {
+    position: absolute;
+    top:0;
+    /* scrolling out of view :-( */
+    z-index:2;
+    background-color:pink;
+}
+.container {
+    position:absolute;
+    width:200px;
+    height:400px;
+    background:gold;
+    left: 150px;
+}
+.cont_elements {overflow-y:scroll; height:100%;}
+.element {
+    position: relative;
+    color: black;
+}
+
+</style>
+
+</head>
+<body style="height: 2000px;">
+<input type="checkbox"/><br>
+<input type="text" /><br>
+<input type="text" /><br>
+<input type="text" /><br>
+<input type="text" /><br>
+<input type="text" /><br>
+<input type="text" /><br>
+<input type="text" /><br>
+<input type="text" /><br>
+<input type="text" /><br>
+b<input type="radio" value="b" name="test">
+d<input type="radio" value="d" name="test">
+z<input type="radio" value="z" name="test">
+<br>
+<textarea id="ta"></textarea>
+<br>
+<select>
+<option value="">none</option>
+<option value="z">z</option>
+<option value="2">2</option>
+<option value="5">5</option>
+</select>
+<br>
+<select id="multi" multiple>
+<option value="z">z</option>
+<option value="2">2</option>
+<option value="5">5</option>
+</select>
+
+
+<div class="container">
+    <div class="header">title</div>
+    <div class="cont_elements">
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+        <div class="element">......</div>
+    </div>
+</div>
+
+<button name="data">data</button>
+
+
+<div id="fPnlId" draggable="true" ondragstart="setPos1(event)" ondragend="setPos(event)">
+  <div class="head" style="margin-bottom:6px; overflow: hidden; justify-content:end;">
+    <div style="margin-left:6px; border:1px solid white; border-radius:2px; cursor:pointer;" onclick="fPnlMin(this)">⏷</div>
+    <div style="margin-left:6px; border:1px solid white; border-radius:2px; cursor:pointer;" onclick="fPnlMax(this)">⏶</div>
+  </div>
+
+  <div class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
+    <div id="fPnlLftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; resize:both; overflow: auto; padding: 6px 6px 16px 6px;">
+      <div style="align-items:center; width:100%; min-width:100px; border:1px solid white; border-radius:6px; box-sizing:border-box;">
+        <input type="text" id="fltCubeVarFltr" name="varFltr" style="width:100%; border:none;" placeholder="variable filter"/>
+        <div style="margin:0px 0px 0px 6px;">🔎</div>
+      </div>
+      <div style="align-items:center; width:100%; min-width:100px; padding:4px 0px 4px 0px; box-sizing:border-box;" id="fPnlLftPnlPth">
+        <div style="border-bottom:1px solid white; font-size:smaller; flex-grow:2; box-sizing: border-box; padding:2px 4px 2px 4px;">
+        State.active.variable
+        </div>
+      </div>
+      <div style="align-items:start; width:100%; min-width:100px; flex-direction:column; font-size: smaller;">
+        <div style>money</div>
+        <div style>XP</div>
+        <div style>Stats</div>
+      </div>
+      <div style="align-items:start; justify-content:space-between; width:100%; min-width:100px;  font-size: smaller;">
+        <div style="box-sizing:border-box;">
+          <button name="watch" type="button" style="display:flex;" title="Add to watch list">Watch</button>
+        </div> 
+        <div style="flex-direction:column; box-sizing:border-box;">
+          <button name="edit" type="button" style="display:flex;">Edit</button>
+          <button name="push" type="button" style="display:flex;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
+          <button name="pop" type="button" style="display:flex;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
+        </div>
+      </div>
+    </div>
+    <div class="rightPanel" style="border:1px solid blue;flex-direction:column; font-size:smaller; min-width:80px;">
+      <div id="fPnlWatch" style="flex-direction:column;">
+        <div>Watch</div>
+      </div>
+      <div id="fPnlEdt" style="flex-direction:column; max-height:200px; overflow:hidden; transition: all 0.3s linear;">
+        <div>Edit</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="meas">&nbsp;</div>
+
+</body>
+</html>
