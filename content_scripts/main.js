@@ -174,9 +174,6 @@ function trvsPthInVar(v=null, pthArr=null, d=null){
   return null;
   }
 
-console.log(v);
-console.log(pthArr);
-
 let cur=v
   for(const indx of pthArr){
     if(indx==d.global.startVar){
@@ -187,6 +184,91 @@ let cur=v
   }
 
 return cur;
+}
+
+
+/*----------------------------------------------
+pre: none 
+post: none
+determine if is scalar. Scalar is only numner, string or boolean
+----------------------------------------------*/
+function isScalar(val=null){
+  switch(val){
+    case 'number':
+    return true;
+    break;
+    case 'string':
+    return true;
+    break;
+    case 'boolean':
+    return true;
+    break;
+    default:
+    return false;
+    break;
+  }
+return false; 
+}
+
+/*----------------------------------------------
+pre: trvsPthInVar(), global sc var, global data var
+post: none
+evaluates the sugarcube variable. Returns one of
+----------------------------------------------*/
+function evalSgrCbVar(pthArr=null, varNm=null){
+  const evl={
+  'type':null,
+  'leaf':null,
+  }
+
+  //bad values
+  if(!pthArr){
+  return evl;
+  }
+
+let cur=trvsPthInVar(sc,pthArr,data);
+  if(varNm){
+    if(!cur.hasOwnProperty(varNm)){
+    return evl;
+    }
+    cur=cur[varNm];
+  }
+
+  //if array, if any member of the array is NOT scalar, i.e. not number, string or boolean, not a leaf
+  if(Array.isArray(cur)){
+  evl.type='array';
+  evl.leaf=true;
+    for(const a of cur){
+      //if any not scalar, is not leaf
+      if(!isScalar(a)){
+      evl.leaf=false;
+      return evl;
+      } 
+    }
+  return evl;
+  }
+
+  if(typeof cur=="object"){
+  evl.type='object';
+  evl.leaf=true;
+    for(const n in cur){
+      if(!isScalar(n)){
+      evl.leaf=false;
+      return evl;
+      }
+    }
+  return evl;
+  }
+
+
+evl.type=typeof cur;
+evl.leaf=false;
+  if(isScalar(cur)){
+  evl.leaf=true;
+  return evl;
+  }
+
+return evl;
 }
 
 /*----------------------------------------------
@@ -203,6 +285,22 @@ function clckLstnFunc(e){
   switch(e.target.getAttribute('clickAction')){
     case 'updatePath':
     console.log(e.target);
+    /*
+    if is leaf
+      update display and give the option to add to edit or watch list.
+    if is obj or array, update path and ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr')
+    */  
+    break;
+    //
+    case 'backPath':
+    const pthArr=spltPth(path);
+      console.log(path);
+      if(pthArr.length>1){
+      pthArr.pop();
+      path=pthArr.join('.');
+      ppltPth(path,`${id}LftPnlPth`);//set current path
+      ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
+      }
     break;
     default:
     ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
@@ -258,8 +356,9 @@ const el=document.getElementById(elId);
   }
 
 const pthArr=spltPth(path);
-console.log(pthArr);
 const cur=trvsPthInVar(sc, pthArr, d);
+
+
 let varArr=Object.keys(cur);
 
 //filter
@@ -272,14 +371,33 @@ varArr.sort();//sorting for ease of lookup
 
 //filling populating elId with var names
 el.innerHTML='';
+
+  //if none. display none
+  if(varArr.length<=0){
+  el.innerText='No Results';
+  return 0;
+  }
+
+
+let tmpEl=null;
+//back button only if there's more than 1 element in path
+  if(path.length>1){
+  tmpEl=document.createElement('div');
+  tmpEl.innerText='<< BACK';
+  tmpEl.setAttribute('clickAction', 'backPath');
+  tmpEl.setAttribute('mouseOverAction', 'highlight');
+  tmpEl.setAttribute('mouseOutAction', 'dehighlight');
+  tmpEl.style.cssText=cssText.dehighlight;
+  el.appendChild(tmpEl);
+  }
   for(const val of varArr){
-  const tmpEl=document.createElement('div');
+  tmpEl=document.createElement('div');
   tmpEl.innerText=val;
   tmpEl.setAttribute('clickAction', 'updatePath');
   tmpEl.setAttribute('mouseOverAction', 'highlight');
   tmpEl.setAttribute('mouseOutAction', 'dehighlight');
   tmpEl.setAttribute('varName',val);
-  tmpEl.style.cssText="display:flex; cursor:pointer;";
+  tmpEl.style.cssText=cssText.dehighlight;
   
   el.appendChild(tmpEl);
   }
@@ -304,7 +422,7 @@ return 0;
     <div id="${id}Cntnt" class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
       <div id="${id}LftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; max-height:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px; width:180px;">
         <div style="display:flex; align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box; overflow:hidden;">
-          <input type="text" id="${id}VarFltr" name="varFltr" style="display:flex; border-radius:5px; flex-grow:1; border:none; min-width:100px;" placeholder="variable filter"/>
+          <input type="text" id="${id}VarFltr" name="varFltr" style="display:flex; border-radius:5px; flex-grow:1; border:none; min-width:100px; font-size:small;" placeholder="variable filter"/>
           <div id="${id}VarFltrBtn" style="display:flex; cursor:pointer; margin:0px 6px 0px 6px;">🔎</div>
         </div>
         <div style="align-items:center; width:100%; min-width:100px; padding:4px 2px 4px 2px; box-sizing:border-box; border-bottom:1px solid; font-size:smaller; display:flex; justify-content:flex-start; align-items:center; overflow:auto;" id="${id}LftPnlPth">
