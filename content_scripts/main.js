@@ -931,68 +931,68 @@ function floatPnlDt(data, tgl){
 const id="extIdNmFltCubeFPnl";
 
 const html=`
-  <div class="head" style="margin-bottom:6px; border-radius:6px 6px 0px 0px;overflow: hidden; justify-content:flex-end;">
-    <div id="${id}MinBtnId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px 3px 3px 3px; cursor:pointer;">⏷</div>
-    <div id="${id}MaxBtnId" style="display:none; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px 3px 3px 3px; cursor:pointer;">⏶</div>
+  <div class="head" style="display:flex; margin-bottom:6px; border-radius:6px 6px 0px 0px; overflow: hidden; justify-content:flex-end; flex-direction:row;">
+    <div id="${id}MinBtnId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px; cursor:pointer;">⏷</div>
+    <div id="${id}MaxBtnId" style="display:none; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px; cursor:pointer;">⏶</div>
     <div id="${id}ClsId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-radius:3px 0px 3px 3px; cursor:pointer; padding:0px 3px 0px 3px;" >x</div>
   </div>
 
   <div class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
     <div id="${id}LftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; max-height:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px; width:180px;">
-      <div style="align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box;">
-        <input type="text" id="fltCubeVarFltr" name="varFltr" style="width:100%; border:none;" placeholder="variable filter"/>
-        <div style="margin:0px 0px 0px 6px;">🔎</div>
+      <div style="display:flex; align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box; overflow:hidden;">
+        <input type="text" id="fltCubeVarFltr" name="varFltr" style="display:flex; border-radius:5px; flex-grow:1; border:none; min-width:100px;" placeholder="variable filter"/>
+        <div style="margin:0px 6px 0px 6px;">🔎</div>
       </div>
       <div style="align-items:center; width:100%; min-width:100px; padding:4px 0px 4px 0px; box-sizing:border-box;" id="${id}LftPnlPth">
         <div style="border-bottom:1px solid; font-size:smaller; flex-grow:2; box-sizing: border-box; padding:2px 4px 2px 4px;">
         State.active.variable
         </div>
       </div>
-      <div style="align-items:flex-start; width:100%; min-width:100px; border-bottom:1px solid; margin-bottom:6px; flex-direction:column; font-size: smaller;">
+      <div style="display:flex; align-items:flex-start; width:100%; min-width:100px; border-bottom:1px solid; margin-bottom:6px; flex-direction:column; font-size: smaller;">
         <div style>money</div>
         <div style>XP</div>
         <div style>Stats</div>
       </div>
-      <div style="align-items:flex-start; justify-content:space-between; width:100%; min-width:100px;  font-size: smaller;">
-        <div style="box-sizing:border-box;">
-          <button name="watch" type="button" style="display:flex;" title="Add to watch list">Watch</button>
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; width:100%; min-width:100px; font-size: smaller;">
+        <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
+          <button style="text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;" name="watch" type="button" title="Add to watch list">Watch</button>
         </div> 
-        <div style="flex-direction:column; align-items:flex-end; box-sizing:border-box;">
-          <button name="edit" type="submit" style="display:flex;width:fit-content;" >Edit</button>
-          <div id="${id}Push">
-            <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;"><input type="text" name="${id}Indx" style="border:none;width:100%;" placeholder="Index" title="For objects only" /></div>
-            <button name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start; box-sizing:border-box;">
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" name="edit" type="submit" style="display:flex;width:fit-content;" >Edit</button>
+          <div id="${id}Push" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
+            <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;"><input type="text" name="${id}Indx" style="border:none;width:100%; padding:0px;" placeholder="Index" title="For objects only" /></div>
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
           </div>
-          <button name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
         </div>
       </div>
     </div>
-    <div class="${id}RghtPnl" style="border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
-      <div id="${id}Watch" style="flex-direction:column;">
+    <div class="${id}RghtPnl" style="display:flex; border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
+      <div id="${id}Watch" style="flex-direction:column; display:flex; text-shadow:none;">
         <div id="${id}WatchTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Watch</div>
         <div id="${id}WatchEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
           <div name="State.active.variable.xp" title="State.active.variable.xp">v.xp: 1000</div>
           <div name="State.active.variable.money" title="State.active.variable.money">v.money: 1000</div>
         </div>
       </div>
-      <div id="${id}Edt" style="flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
-        <div id="${id}EdtTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
+      <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
+        <div id="${id}EdtTtl" style="display:flex; background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
         <div id="${id}EdtEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
-          <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
-            <button type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">set v.xp</button>
-            <input type="text" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;" />
-            <button type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
+          <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">set v.xp</button>
+            <input type="text" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;" />
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
           </div>
-          <div name="state.active.variable.money" title="state.active.variable.money" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
-            <button type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">push v.money</button>
-            <input type="text" name="fltCubeEdtIdIndx.1" placeholder="indx" style="display:flex;width:fit-content;flex-grow:1;min-width:60px;width:60px;" />
-            <input type="number" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;width:100px;" />
-            <button type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
+          <div name="state.active.variable.money" title="state.active.variable.money" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">push v.money</button>
+            <input type="text" name="fltCubeEdtIdIndx.1" placeholder="indx" style="display:flex;width:fit-content;flex-grow:1;min-width:60px;width:60px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
+            <input type="number" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;width:100px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
           </div>
           <div name="state.active.variable.events" title="state.active.variable.events" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
-            <button type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">pop v.events</button>
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" type="submit" name="fltCubeEdtId.1" style="display:flex;width:fit-content;text-wrap:nowrap;">pop v.events</button>
             <div style="display:flex; flex-grow:2;">&nbsp;</div>
-            <button type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" style="display:flex;width:fit-content;">x</button>
           </div>
         </div>
       </div>
@@ -1000,11 +1000,11 @@ const html=`
         &nbsp;
       </div>
       <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
-        <div style="">
-          <button style="box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;">+</button>
-          <input type="text" placeholder="testing" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 3px 3px 0px 0px;"/>
+        <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;">+</button>
+          <input type="text" placeholder="testing" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA;"/>
         </div>
-        <select id="${id}PrflSlct" style="border-radius:3px 3px 6px 3px; border-left:1px solid; border-top:1px solid; border-bottom:0px; border-right:0px;">
+        <select id="${id}PrflSlct" style="display:flex; border-color:#AAAAAA; border-radius:3px 3px 6px 3px; border-left:1px solid #AAAAAA; border-top:1px solid #AAAAAA; border-bottom:0px; border-right:0px; padding:1px 2px;">
           <option value="">none</option>
         </select>
       </div>
@@ -1015,6 +1015,15 @@ const html=`
 //if float panel is toggled, look to see if floating panel already exists, if so, do nothing
 let el=document.getElementById(id);
   if(el && el.nodeType){
+  return 0;
+  }
+
+//toggle off. Don't create panel and remove existing panel
+  if(!tgl){
+    if(el){
+    logger('Toggle set to false. Removing existing floating panel'); 
+    document.body.removeChild(el);
+    }
   return 0;
   }
 
@@ -1092,7 +1101,15 @@ const max=document.getElementById(`${id}MaxBtnId`);
   fillPrflSlct(data,`${id}PrflSlct`); 
 }
 
-
+/*--------------------------
+pre:
+post:
+unifying console.log
+--------------------------*/
+function logger(str){
+const lgStrt='floatingcube: ';
+console.log(lgStrt+str);
+}
 
 
 //================================================= main code run ====================================================
@@ -1100,8 +1117,9 @@ const dfltStrg={
   'global':{
   'enabled':true, //global enable switch
   'onEvent':'click', //which event to update/redraw on.
-  'fltPnlTgl':false,
-  'startVar':'SugarCube' //the name of the global variable to pull from. Most of what we care about is in SugarCube.State.active.variables
+  'fltPnlTgl':true,
+  'startVar':'SugarCube', //the name of the global variable to pull from. Most of what we care about is in SugarCube.State.active.variables
+  'format':'SugarCube'
   },
   'profiles':{ //profiles to each game/page
 
@@ -1197,13 +1215,37 @@ dmn:window.location.host
 
 //document.addEventListener("mouseover", mouseOvrEvnt);
 
+const glblVarNm='fltCubeVar';
 browser.storage.local.get().then(function(d){
   if(Object.keys(d).length<=0){
-  console.log("floatingcube: No settings found. Initializing with default.");
+  logger('No settings found. Initializing with default.');
   d={ ...dfltStrg }
   }
 
-floatPnlDt(d,true);
+  /*
+  'global':{
+  'enabled':true, //global enable switch
+  'onEvent':'click', //which event to update/redraw on.
+  'fltPnlTgl':false,
+  'startVar':'SugarCube'
+  */
+
+  if(!d.global.enabled){
+  logger('Plugin not enabled.');
+  return null;
+  }
+
+/*
+  //see if this is a SugarCube page
+  const twEls=document.getElementsByTagName('tw-storydata');
+  if(!twEls||twEls.length<=0||!twEls[0].hasAttribute('format')||twEls[0].getAttribute('format')!=d.global.format){
+  logger(`Could not find tw-storydata with format==${d.global.format}. Not starting.`);
+  return null;
+  }
+*/
+
+  logger(`Starting. Panel toggle is ${d.global.fltPnlTgl}`);
+  floatPnlDt(d,d.global.fltPnlTgl);
 /*
 //set the hashs for east access
 ignrHsh=strToHsh(d.settings.ignrLst);
