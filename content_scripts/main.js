@@ -33,11 +33,6 @@ var data=null;//floatingCube data
   return false;
   }
 
-  //I can't believe that this function doesn't exist in javascript
-  // makes O'Reily into O\'Reily or "air quotes" into \"air quotes\"
-  function addslashes(str){
-  return str.replace(/['"\\]/g, '\\$&');
-  }
 
   /*--------------------------
   pre: none
@@ -48,185 +43,259 @@ var data=null;//floatingCube data
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+  /*-----------------------
+  pre: pageDone()
+  post: none
+  runs pageDone after "secs" amount of time
+  -----------------------*/
+  async function delayRun(secs=6500) {
+    await sleep(secs);
+    pageDone();
+  }
 
-
-  /*---------------------------------------------------
+  /*----------------------------------------------------------
   pre:
   post:
-  ---------------------------------------------------*/
-  function floatPnlDt(data, tgl){
-  
-  const html=`
-    <div id="${id}HeadSpcr" class="head" style="display:flex; margin-bottom:6px; border-radius:6px 6px 0px 0px; overflow: hidden; justify-content:flex-end; flex-direction:row;">
-      <div id="${id}MinBtnId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px; cursor:pointer;">⏷</div>
-      <div id="${id}MaxBtnId" style="display:none; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px; cursor:pointer;">⏶</div>
-      <div id="${id}ClsId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-radius:3px 0px 3px 3px; cursor:pointer; padding:0px 3px 0px 3px;" >x</div>
-    </div>
-  
-    <div id="${id}Cntnt" class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
-      <div id="${id}LftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; max-height:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px; width:180px;">
-        <div style="display:flex; align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box; overflow:hidden;">
-          <input type="text" id="${id}VarFltr" name="varFltr" style="display:flex; border-radius:5px; flex-grow:1; border:none; min-width:100px;" placeholder="variable filter"/>
-          <div id="${id}VarFltrBtn" style="margin:0px 6px 0px 6px;">🔎</div>
-        </div>
-        <div style="align-items:center; width:100%; min-width:100px; padding:4px 2px 4px 2px; box-sizing:border-box; border-bottom:1px solid; font-size:smaller; display:flex; justify-content:flex-start; align-items:center;" id="${id}LftPnlPth">
-          State.active.variable
-        </div>
-        <div id="${id}LftPnlVarLst" style="display:flex; align-items:stretch; width:100%; min-width:100px; border-bottom:1px solid; margin-bottom:6px; flex-direction:column; font-size: smaller;">
-         none (click to reload) 
-        </div>
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; width:100%; min-width:100px; font-size: smaller;">
-          <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
-            <button style="display:flex; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;" name="watch" type="button" title="Add to watch list">Watch</button>
-          </div> 
-          <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start; box-sizing:border-box;">
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" name="edit" type="submit" style="display:flex;width:fit-content; text-wrap:nowrap; min-width:4px;" >Edit</button>
-            <div id="${id}Push" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
-              <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;"><input type="text" name="${id}Indx" style="border:none;width:100%; padding:0px;" placeholder="Index" title="For objects only" /></div>
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; text-wrap:nowrap; width:fit-content; min-width:4px;" name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
-            </div>
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;text-wrap:nowrap; width:fit-content; min-width:4px;" name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
-          </div>
-        </div>
-      </div>
-      <div class="${id}RghtPnl" style="display:flex; border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
-        <div id="${id}Watch" style="flex-direction:column; display:flex; text-shadow:none;">
-          <div id="${id}WatchTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Watch</div>
-          <div id="${id}WatchEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
-            <div name="State.active.variable.xp" title="State.active.variable.xp">v.xp: 1000</div>
-            <div name="State.active.variable.money" title="State.active.variable.money">v.money: 1000</div>
-          </div>
-        </div>
-        <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
-          <div id="${id}EdtTtl" style="display:flex; background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
-          <div id="${id}EdtEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
-            <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >set v.xp</button>
-              <input type="text" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;" />
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" >x</button>
-            </div>
-            <div name="state.active.variable.money" title="state.active.variable.money" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >push v.money</button>
-              <input type="text" name="fltCubeEdtIdIndx.1" placeholder="indx" style="display:flex;width:fit-content;flex-grow:1;min-width:60px;width:60px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
-              <input type="number" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;width:100px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;text-wrap:nowrap;width:fit-content;min-width:4px;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" >x</button>
-            </div>
-            <div name="state.active.variable.events" title="state.active.variable.events" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >pop v.events</button>
-              <div style="display:flex; flex-grow:2;">&nbsp;</div>
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit">x</button>
-            </div>
-          </div>
-        </div>
-        <div id="${id}RghtPnlSpcr" style="display:flex; flex-grow:1;">
-          &nbsp;
-        </div>
-        <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
-          <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;">+</button>
-            <input type="text" placeholder="testing" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
-          </div>
-          <select id="${id}PrflSlct" style="display:flex; border-color:#AAAAAA; border-radius:3px 3px 6px 3px; border-left:1px solid #AAAAAA; border-top:1px solid #AAAAAA; border-bottom:0px; border-right:0px; padding:1px 2px;">
-            <option value="">none</option>
-          </select>
-        </div>
-      </div>
-    </div>`;
-  
-  
-  //if float panel is toggled, look to see if floating panel already exists, if so, do nothing
-  let el=document.getElementById(id);
-    if(el && el.nodeType){
-    return 0;
-    }
-  
-  //toggle off. Don't create panel and remove existing panel
-    if(!tgl){
-      if(el){
-      logger('Toggle set to false. Removing existing floating panel'); 
-      document.body.removeChild(el);
-      }
-    return 0;
-    }
-  
-  
+
+  ----------------------------------------------------------*/
+  function setMsg(msg){
+
+  const sty=document.createElement("style");
+  sty.type="text/css";
+  sty.className="extIdNmSARAMsgSty";
+  sty.textContent="@keyframes extIdNmSARAMsgStyAni{0%{opacity:0.85;}100%{opacity:0;}}";
+  sty.id=sty.className;
+
+  document.head.appendChild(sty);
+
+  var id="extIdNmSARAMsg";
   el=document.createElement("div");
-  el.style.cssText="border-color:#AAAAAA;position:fixed;left:50vw;top:30vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.78;";
+  el.style.cssText="position:fixed; box-sizing: border-box; top: 0px; left: 0px; width:100%; display:flex; justify-content: center; opacity: 0.85; z-index:999999; animation: extIdNmSARAMsgStyAni 1.5s ease-in-out 3.5s forwards;";
   el.id=id;
-  el.draggable=true;
   
-    el.addEventListener("dragstart", (e)=>{
-    e.target.setAttribute("prevX", e.offsetX);
-    e.target.setAttribute("prevY", e.offsetY);
-    });
-    el.addEventListener("dragend", (e)=>{
-    const pos=e.target.getBoundingClientRect();
-    const prevX=e.target.getAttribute("prevX");
-    const prevY=e.target.getAttribute("prevY");
-    e.target.style.top=(pos.y+e.offsetY-prevY)+"px";
-    e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
-    });
-  
-  el.innerHTML=html;
-  
-  document.body.appendChild(el);
-  
-  //setting close button
-  const cls=document.getElementById(`${id}ClsId`)
-    if(cls){
-      cls.addEventListener('click', (e)=>{
+  el.appendChild(document.createElement("div"));
+  el.firstChild.style.cssText="padding: 8px 12px 8px 12px; border-radius: 0px 0px 6px 6px; background-color:#606060; color:#ffffff; font-weight:700; font-size: x-large; white-space:pre-wrap; ";
+  el.firstChild.textContent=msg;
+
+    el.onanimationend=(e)=>{
+      try{
       document.body.removeChild(el);
-      });
-    }
-  
-  //min button
-  const min=document.getElementById(`${id}MinBtnId`);
-    if(min){
-      min.addEventListener('click',(e)=>{
-      const lft=document.getElementById(`${id}LftPnl`);
-      lft.style.maxWidth="0px";
-      lft.style.maxHeight="0px";
-      lft.style.padding="0px";
-      const edt=document.getElementById(`${id}Edt`);
-      edt.style.maxHeight='0px';
-      edt.style.maxWidth='0px';
-      e.target.style.display='none';
-      e.target.nextElementSibling.style.display="flex";
-      const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
-      prflRow.style.maxWidth='0px';
-      prflRow.style.maxHeight='0px';
-      });
-    }
-  
-  //max button
-  const max=document.getElementById(`${id}MaxBtnId`);
-    if(max){
-      max.addEventListener('click',(e)=>{
-      const lft=document.getElementById(`${id}LftPnl`);
-      lft.style.maxWidth="500px";
-      lft.style.maxHeight="500px";
-      lft.style.padding="0px 6px 16px 6px";
-      const edt=document.getElementById(`${id}Edt`);
-      edt.style.maxHeight='500px';
-      edt.style.maxWidth='500px';
-      e.target.style.display='none';
-      e.target.previousElementSibling.style.display="flex";
-      const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
-      prflRow.style.maxWidth='300px';
-      prflRow.style.maxHeight='80px';
-      });
-    }
-  
-  //filling out profile select
-  fillPrflSlct(data,`${id}PrflSlct`); 
-  
-  path=(!path||path=="")?data.global.startVar:path;
-  
-  //fill out path
-  ppltPth(path,`${id}LftPnlPth`);//set current path
-  
-  return el;
+      document.head.removeChild(sty);
+      }
+      catch(err){
+      console.log("SARA: unable to remove element and/or style for the over page message. This is okay if the element doesn't exist. "+err);
+      }
+    };
+
+  document.body.appendChild(el);
+
+  };
+
+
+/*---------------------------------------------------
+pre: none
+post: element changed
+fill the profile select with profile names
+---------------------------------------------------*/
+function fillPrflSlct(obj=null,elId){
+const slct=document.getElementById(elId);
+  if(!slct){
+  console.log(`${plgInNm}: fillPrflSlct(): no element found with id "${elId}"`);
+  return null;
   }
+
+  if(!obj||typeof obj!='object'||!obj.hasOwnProperty('profiles')||Object.keys(obj['profiles'])<=0){
+  console.log(`${plgInNm}: fillPrflSlct(): obj param has no profiles`);
+  return null;
+  }
+
+
+  for(const inx of Object.keys(obj['profiles'])){
+  const opt=document.createElement('option');
+  opt.value=inx;
+  opt.innerText=inx;
+  slct.appendChild(opt);
+  }
+
+}
+
+/*---------------------------------------------------
+pre:
+post:
+---------------------------------------------------*/
+function floatPnlDt(data, tgl){
+
+const html=`
+  <div id="${id}HeadSpcr" class="head" style="display:flex; margin-bottom:6px; border-radius:6px 6px 0px 0px; overflow: hidden; justify-content:flex-end; flex-direction:row;">
+    <div id="${id}MinBtnId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px; cursor:pointer;">⏷</div>
+    <div id="${id}MaxBtnId" style="display:none; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-right:1px solid; border-radius:3px; cursor:pointer;">⏶</div>
+    <div id="${id}ClsId" style="display:flex; margin-left:6px; border-left:1px solid; border-bottom:1px solid; border-radius:3px 0px 3px 3px; cursor:pointer; padding:0px 3px 0px 3px;" >x</div>
+  </div>
+
+  <div id="${id}Cntnt" class="content" style="min-width:80px; min-height:60px; display:flex; padding:0px; flex-direction:row; justify-content: space-between;">
+    <div id="${id}LftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; max-height:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px; width:180px;">
+      <div style="display:flex; align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box; overflow:hidden;">
+        <input type="text" id="${id}VarFltr" name="varFltr" style="display:flex; border-radius:5px; flex-grow:1; border:none; min-width:100px;" placeholder="variable filter"/>
+        <div id="${id}VarFltrBtn" style="margin:0px 6px 0px 6px;">🔎</div>
+      </div>
+      <div style="align-items:center; width:100%; min-width:100px; padding:4px 2px 4px 2px; box-sizing:border-box; border-bottom:1px solid; font-size:smaller; display:flex; justify-content:flex-start; align-items:center;" id="${id}LftPnlPth">
+        State.active.variable
+      </div>
+      <div id="${id}LftPnlVarLst" style="display:flex; align-items:flex-start; width:100%; min-width:100px; border-bottom:1px solid; margin-bottom:6px; flex-direction:column; font-size: smaller;">
+       none (reload) 
+      </div>
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; width:100%; min-width:100px; font-size: smaller;">
+        <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
+          <button style="display:flex; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;" name="watch" type="button" title="Add to watch list">Watch</button>
+        </div> 
+        <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start; box-sizing:border-box;">
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" name="edit" type="submit" style="display:flex;width:fit-content; text-wrap:nowrap; min-width:4px;" >Edit</button>
+          <div id="${id}Push" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
+            <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;"><input type="text" name="${id}Indx" style="border:none;width:100%; padding:0px;" placeholder="Index" title="For objects only" /></div>
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; text-wrap:nowrap; width:fit-content; min-width:4px;" name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
+          </div>
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;text-wrap:nowrap; width:fit-content; min-width:4px;" name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
+        </div>
+      </div>
+    </div>
+    <div class="${id}RghtPnl" style="display:flex; border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
+      <div id="${id}Watch" style="flex-direction:column; display:flex; text-shadow:none;">
+        <div id="${id}WatchTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Watch</div>
+        <div id="${id}WatchEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
+          <div name="State.active.variable.xp" title="State.active.variable.xp">v.xp: 1000</div>
+          <div name="State.active.variable.money" title="State.active.variable.money">v.money: 1000</div>
+        </div>
+      </div>
+      <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
+        <div id="${id}EdtTtl" style="display:flex; background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
+        <div id="${id}EdtEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
+          <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >set v.xp</button>
+            <input type="text" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;" />
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" >x</button>
+          </div>
+          <div name="state.active.variable.money" title="state.active.variable.money" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >push v.money</button>
+            <input type="text" name="fltCubeEdtIdIndx.1" placeholder="indx" style="display:flex;width:fit-content;flex-grow:1;min-width:60px;width:60px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
+            <input type="number" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;width:100px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;text-wrap:nowrap;width:fit-content;min-width:4px;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" >x</button>
+          </div>
+          <div name="state.active.variable.events" title="state.active.variable.events" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >pop v.events</button>
+            <div style="display:flex; flex-grow:2;">&nbsp;</div>
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit">x</button>
+          </div>
+        </div>
+      </div>
+      <div id="${id}RghtPnlSpcr" style="display:flex; flex-grow:1;">
+        &nbsp;
+      </div>
+      <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
+        <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;">+</button>
+          <input type="text" placeholder="testing" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
+        </div>
+        <select id="${id}PrflSlct" style="display:flex; border-color:#AAAAAA; border-radius:3px 3px 6px 3px; border-left:1px solid #AAAAAA; border-top:1px solid #AAAAAA; border-bottom:0px; border-right:0px; padding:1px 2px;">
+          <option value="">none</option>
+        </select>
+      </div>
+    </div>
+  </div>`;
+
+
+//if float panel is toggled, look to see if floating panel already exists, if so, do nothing
+let el=document.getElementById(id);
+  if(el && el.nodeType){
+  return 0;
+  }
+
+//toggle off. Don't create panel and remove existing panel
+  if(!tgl){
+    if(el){
+    logger('Toggle set to false. Removing existing floating panel'); 
+    document.body.removeChild(el);
+    }
+  return 0;
+  }
+
+
+el=document.createElement("div");
+el.style.cssText="border-color:#AAAAAA;position:fixed;left:50vw;top:30vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.78;";
+el.id=id;
+el.draggable=true;
+
+  el.addEventListener("dragstart", (e)=>{
+  e.target.setAttribute("prevX", e.offsetX);
+  e.target.setAttribute("prevY", e.offsetY);
+  });
+  el.addEventListener("dragend", (e)=>{
+  const pos=e.target.getBoundingClientRect();
+  const prevX=e.target.getAttribute("prevX");
+  const prevY=e.target.getAttribute("prevY");
+  e.target.style.top=(pos.y+e.offsetY-prevY)+"px";
+  e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
+  });
+
+el.innerHTML=html;
+
+document.body.appendChild(el);
+
+//setting close button
+const cls=document.getElementById(`${id}ClsId`)
+  if(cls){
+    cls.addEventListener('click', (e)=>{
+    document.body.removeChild(el);
+    });
+  }
+
+//min button
+const min=document.getElementById(`${id}MinBtnId`);
+  if(min){
+    min.addEventListener('click',(e)=>{
+    const lft=document.getElementById(`${id}LftPnl`);
+    lft.style.maxWidth="0px";
+    lft.style.maxHeight="0px";
+    lft.style.padding="0px";
+    const edt=document.getElementById(`${id}Edt`);
+    edt.style.maxHeight='0px';
+    edt.style.maxWidth='0px';
+    e.target.style.display='none';
+    e.target.nextElementSibling.style.display="flex";
+    const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
+    prflRow.style.maxWidth='0px';
+    prflRow.style.maxHeight='0px';
+    });
+  }
+
+//max button
+const max=document.getElementById(`${id}MaxBtnId`);
+  if(max){
+    max.addEventListener('click',(e)=>{
+    const lft=document.getElementById(`${id}LftPnl`);
+    lft.style.maxWidth="500px";
+    lft.style.maxHeight="500px";
+    lft.style.padding="0px 6px 16px 6px";
+    const edt=document.getElementById(`${id}Edt`);
+    edt.style.maxHeight='500px';
+    edt.style.maxWidth='500px';
+    e.target.style.display='none';
+    e.target.previousElementSibling.style.display="flex";
+    const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
+    prflRow.style.maxWidth='300px';
+    prflRow.style.maxHeight='80px';
+    });
+  }
+
+//filling out profile select
+fillPrflSlct(data,`${id}PrflSlct`); 
+
+path=(!path||path=="")?data.global.startVar:path;
+
+//fill out path
+ppltPth(path,`${id}LftPnlPth`);//set current path
+
+return el;
+}
 
 /*--------------------------
 pre:
@@ -339,7 +408,7 @@ el.innerHTML='';
   tmpEl.innerText=val;
   tmpEl.setAttribute('action', 'updatePath');
   tmpEl.setAttribute('varName',val);
-  tmpEl.style.cssText="display:flex; justify-content:flex-start; align-items:center; align-content:center; cursor:pointer;";
+  tmpEl.style.cssText="display:flex; cursor:pointer;";
   
   el.appendChild(tmpEl);
   }
@@ -436,104 +505,51 @@ const dfltStrg={
 }
 
 
-//document.addEventListener("mouseover", mouseOvrEvnt);
-const glblVarNm='fltCubeVar';
-browser.storage.local.get().then(function(d){
-  if(Object.keys(d).length<=0){
-  logger('No settings found. Initializing with default.');
-  d={ ...dfltStrg }
-  }
-
-data=d;//setting data for global use
-
-  if(!d.global.enabled){
-  logger('Plugin not enabled.');
-  return null;
-  }
-
+  //document.addEventListener("mouseover", mouseOvrEvnt);
+  const glblVarNm='fltCubeVar';
+  browser.storage.local.get().then(function(d){
+    if(Object.keys(d).length<=0){
+    logger('No settings found. Initializing with default.');
+    d={ ...dfltStrg }
+    }
   
-
-//check if this is a SugarCube page, if not, do nothing.
-const twEls=document.getElementsByTagName('tw-storydata');
-  if(!twEls||twEls.length<=0||!twEls[0].hasAttribute('format')||twEls[0].getAttribute('format')!=data.global.format){
-  logger(`Could not find tw-storydata with format==${data.global.format}. Not starting.`);
-  return null;
-  }
-
-
-//adding on click event listener to the floating panel so that, on click,it can refresh values.
-logger(`Starting. Panel toggle is ${data.global.fltPnlTgl}`);
-const fPnl=floatPnlDt(d,data.global.fltPnlTgl);
-  if(fPnl){
-  fPnl.addEventListener('click',clckLstnFunc);
-  }
-
-
-//populating sc
-  if(!sc&&window.wrappedJSObject.hasOwnProperty(data.global.startVar)){
-  sc=window.wrappedJSObject[data.global.startVar]; //
-  /*Mozilla docs said it's best practice to do this
-  https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts#xray_vision_in_firefox
-  It says to read a page for more details but the page it links to doesn't go into detail. I still don't understand what it means
-  that it's "unwrapped" and that it needs to be "rewrap", especially if we're only pulling on variable.
-  */
-  XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
-  }
-
-
-
-/*
-//set the hashs for east access
-ignrHsh=strToHsh(d.settings.ignrLst);
-applyHsh=strToApplyLst(d.settings.applyLst);
-
-//see if need to make hoverid. element.
-hoverId(d.settings.hoverId);
-
-isApply=applyHsh.hasOwnProperty(dmn); //current page's domain in applyHsh?
-
-
-curPrfl=dtrmnPrfl(dmn, d, applyHsh);
-//see if floating panel should exist
-floatPnlDt(d, d.settings.floatPnl, curPrfl);
-
-  //if this fails, we can't do the rest. Stop here
-  if(curPrfl==false){
-  console.log("SARA: No profiles found. Nothing to do.");
-  browser.runtime.onMessage.addListener(runOnMsg);
-  return false;
-  }
-
-
-  //if auto fill on see if domain is not in ignore list, if true, do nothing, if not, find fields and apply
-  if(d.settings.autoFill){
-    if(!ignrHsh.hasOwnProperty(dmn)){
-    //find and fill
-    fillNMsg(d.profiles[curPrfl], "Autofill ON\r\nFields Filled: ##num##\r\nProfile: "+curPrfl, d.settings.eventFill);
+  data=d;//setting data for global use
+  
+    if(!d.global.enabled){
+    logger('Plugin not enabled.');
+    return null;
     }
-  }
-  //if auto fill not on, see if domain is apply list. If so, apply. If not, do nothing.
-  else{
-    if(isApply){
-    //find and fill
-    fillNMsg(d.profiles[curPrfl], "Apply List Fill\r\nFields Filled: ##num##\r\nProfile: "+curPrfl, d.settings.eventFill);
+  
+    
+  
+  //check if this is a SugarCube page, if not, do nothing.
+  const twEls=document.getElementsByTagName('tw-storydata');
+    if(!twEls||twEls.length<=0||!twEls[0].hasAttribute('format')||twEls[0].getAttribute('format')!=data.global.format){
+    logger(`Could not find tw-storydata with format==${data.global.format}. Not starting.`);
+    return null;
     }
-  }
-*/
+  
+  
+  //adding on click event listener to the floating panel so that, on click,it can refresh values.
+  logger(`Starting. Panel toggle is ${data.global.fltPnlTgl}`);
+  const fPnl=floatPnlDt(d,data.global.fltPnlTgl);
+    if(fPnl){
+    fPnl.addEventListener('click',clckLstnFunc);
+    }
+  
+  
+  //populating sc
+    if(!sc&&window.wrappedJSObject.hasOwnProperty(data.global.startVar)){
+    sc=window.wrappedJSObject[data.global.startVar]; //
+    /*Mozilla docs said it's best practice to do this
+    https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts#xray_vision_in_firefox
+    It says to read a page for more details but the page it links to doesn't go into detail. I still don't understand what it means
+    that it's "unwrapped" and that it needs to be "rewrap", especially if we're only pulling on variable.
+    */
+    XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
+    }
+  });
 
-//get message from other parts
-//browser.runtime.onMessage.addListener(runOnMsg);
-});
-
-/*
-const script = {
-  id: "a-script",
-  js: ["content_scripts/main.js"],
-  matches: ["file:///*"],
-};
-
-  await browser.scripting.registerContentScripts([script]).catch(e=>{})
-*/
 
 })();
 
