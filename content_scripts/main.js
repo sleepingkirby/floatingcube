@@ -253,6 +253,7 @@ function evalSgrCbVar(path=null, varNm=null){
   const evl={
   'type':null,
   'leaf':null,
+  'val':null
   }
 
   //bad values
@@ -272,7 +273,7 @@ let cur=trvsPthInVar(sc,pthArr,data);
   evl.leaf=true;
     for(const a of cur){
       //if any not scalar, is not leaf
-      if(!isScalar(cur[a])){
+      if(!isScalar(a)){
       evl.leaf=false;
       return evl;
       } 
@@ -312,10 +313,36 @@ evl.type=typeof cur;
 evl.leaf=false;
   if(isScalar(cur)){
   evl.leaf=true;
+  evl.val=cur;
   return evl;
   }
 
 return evl;
+}
+
+
+/*-------------------------------------------------------------------------------
+pre:
+post:
+update the variable selected element
+-------------------------------------------------------------------------------*/
+function updtVarSlct(varNm, varEvl, elId=null){
+let varSlctId=elId;
+  if(!varSlctId){
+    varSlctId=id+'LftPnlVarSlct';
+  }
+const el=document.getElementById(varSlctId);
+const infoEl=document.createElement('div');
+infoEl.innerText=`${varNm}(${varEvl.type})`;
+  if(varEvl.val!=null||varEvl.val!=undefined){
+  infoEl.innerText+=': '+varEvl.val;
+  }
+
+el.innerHTML='';
+
+el.appendChild(infoEl);
+
+return infoEl;
 }
 
 /*----------------------------------------------
@@ -335,33 +362,31 @@ function clckLstnFunc(e){
       if(!vl){
       return null;
       }
-    /*
-    if is leaf
-      update display and give the option to add to edit or watch list.
-    if is obj or array, update path and ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr')
-    */
     const v=evalSgrCbVar(path,vl);
+    console.log(`>>>>>>>>>>>>>>>>>>>${vl}`);
+    console.log(v);
       if(v.leaf){
       //update buttons/gui
-      return null;
+      updtVarSlct(vl, v);
       }
 
       if(v.type=="object"||v.type=="array"){
       addPth(vl);
       ppltPth(path,`${id}LftPnlPth`);//set current path
-      ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
+      ppltVarDpth(path, data);//populate var list
       return null;
       }
     break;
 
     case 'backPath':
     popPth();
+    document.getElementById(id+'LftPnlVarSlct').innerHTML='';
     ppltPth(path,`${id}LftPnlPth`);//set current path
-    ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
+    ppltVarDpth(path, data);
     break;
 
     default:
-    ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
+    ppltVarDpth(path, data);
     break;
   }
 }
@@ -403,11 +428,12 @@ function mouseOutLstnFunc(e){
 pre: glocal var sc
 post:
 populate the element with the variables/index of the current level.
+path needs to be at an object or array. NOT SCALAR
 --------------------------*/
-function ppltVarDpth(path, d, elId=null, fltrEl=null){
-  if(!elId){
-  return null;
-  }
+function ppltVarDpth(path, d, eId=null, fId=null){
+//id+'LftPnlVarLst', id+'VarFltr'
+const elId=eId||`${id}LftPnlVarLst`;
+const fltrId=fId||`${id}VarFltr`;
 const el=document.getElementById(elId);
   if(!el){
   return null;
@@ -416,12 +442,11 @@ const el=document.getElementById(elId);
 const pthArr=spltPth(path);
 const cur=trvsPthInVar(sc, pthArr, d);
 
-
 let varArr=Object.keys(cur);
 
 //filter
-const fltr=document.getElementById(fltrEl);
-  if(fltr.value && fltr.value!=""){
+const fltr=document.getElementById(fltrId);
+  if(fltr&&fltr.value&&fltr.value!=""){
   varArr=varArr.filter(e=>e.toLocaleLowerCase().includes(fltr.value.toLocaleLowerCase()));
   }
 
@@ -504,13 +529,12 @@ return 0;
         <div style="align-items:center; width:100%; min-width:100px; padding:4px 2px 4px 2px; box-sizing:border-box; border-bottom:1px solid; font-size:smaller; display:flex; justify-content:flex-start; align-items:center; overflow:auto;" id="${id}LftPnlPth">
           State.active.variable
         </div>
-        <div id="${id}LftPnlVarLst" style="display:flex; align-items:stretch; width:100%; min-width:100px; border-bottom:1px solid; margin-bottom:6px; flex-direction:column; font-size: smaller; max-height:350px; overflow:auto;">
+        <div id="${id}LftPnlVarLst" style="display:flex; align-items:stretch; width:100%; min-width:100px; border-bottom:1px solid; flex-direction:column; font-size: smaller; max-height:350px; overflow:auto;">
          none (reload) 
         </div>
+        <div id="${id}LftPnlVarSlct" style="display:flex; flex-direction:row; align-items:flex-start; justify-content:flex-start; box-sizing:border-box; margin:2px 2px 3px 2px; padding-bottom:6px; overflow:auto; text-wrap:nowrap;">
+        </div>
         <div style="display:flex; align-items:flex-start; justify-content:space-between; width:100%; min-width:100px; font-size: smaller;">
-          <div style="display:flex; flex-direction:row; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
-          &nbsp;
-          </div>
           <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
             <button style="display:flex; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;" name="watch" type="button" title="Add to watch list">Watch</button>
           </div> 
@@ -666,6 +690,12 @@ return 0;
   el.addEventListener('click',clckLstnFunc);
   el.addEventListener('mouseover',mouseOvrLstnFunc);
   el.addEventListener('mouseout',mouseOutLstnFunc);
+  //replace with someting better later
+  document.getElementById(`${id}VarFltr`).addEventListener('keypress',(e)=>{
+    if(e.key=="Enter"){
+    ppltVarDpth(path, data);
+    }
+  });
  
   return el;
   }
