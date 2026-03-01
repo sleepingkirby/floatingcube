@@ -344,6 +344,55 @@ el.scrollLeft=el.scrollLeftMax
 return infoEl;
 }
 
+/*-------------------------------------------------------------------------------
+pre: none
+post: none
+generate elements for each variable type. This does NOT check if the 
+-------------------------------------------------------------------------------*/
+function applyLftBtn(varNm, varEvl, eId=null){
+const elId=eId||`${id}LftPnlBtns`;
+  switch(varEvl.type){
+    case 'number':
+    case 'string':
+    case 'boolean':
+
+    const wtch=document.createElement('button');
+    wtch.style.cssText="display:flex; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;";
+    wtch.name="watch";
+    wtch.type="button";
+    wtch.title="Add to watch list";
+    wtch.innerText="Watch";
+    wtch.setAttribute('varName',varNm);
+    wtch.setAttribute('varPath',path);
+    wtch.setAttribute('varType',varEvl.type);
+    wtch.setAttribute('varAction','watch');
+
+    const edt=document.createElement('button');
+    edt.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
+    edt.type="submit";
+    edt.name="Edit";
+    edt.title="Add to edit list";
+    edt.innerText="Edit";
+    edt.setAttribute('varName',varNm);
+    edt.setAttribute('varPath',path);
+    edt.setAttribute('varType',varEvl.type);
+    edt.setAttribute('varAction','edit');
+    edt.setAttribute('varVal',varEvl.val);
+
+    const cntnr=document.getElementById(elId);
+    console.log(`elId: ${elId}`);
+    console.log(cntnr);
+    cntnr.innerHTML='';
+    cntnr.appendChild(wtch);
+    cntnr.appendChild(edt);
+    break;
+
+
+    default:
+    break;
+  }
+}
+
 /*----------------------------------------------
 pre: (global) data
 post:
@@ -355,16 +404,35 @@ function clckLstnFunc(e){
   sc=window.wrappedJSObject[data.global.startVar];
   XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
 
+  console.log(e.target);
+
   switch(e.target.getAttribute('clickAction')){
     case 'updatePath':
     const vl=e.target.getAttribute('varname');
       if(!vl){
       return null;
       }
-    document.getElementById(`${id}VarFltr`).value='';
+    document.getElementById(`${id}VarFltr`).value='';//clears variable name filter
+    document.getElementById(`${id}LftPnlBtns`).innerHTML='';//clears buttons
     const v=evalSgrCbVar(path,vl);
       if(v.leaf){
       updtVarSlct(vl, v);
+      /*
+      update buttons by v.type;
+      watch button only exists for scalar values
+        v.val will be not null if this is the case
+      
+      if scalar
+        input field for value (number or string input. drop down for true/false for boolean) and an Edit button
+
+      if Array
+        input field for val to push
+        button to pop
+
+      if Object
+        input field for index and for val to push
+      */
+      applyLftBtn(vl, v);
       }
 
       if(v.type=="object"||v.type=="array"){
@@ -531,18 +599,8 @@ return 0;
         </div>
         <div id="${id}LftPnlVarSlct" style="display:flex; flex-direction:row; align-items:flex-start; justify-content:flex-start; box-sizing:border-box; margin:2px 2px 3px 2px; padding-bottom:6px; overflow:auto; text-wrap:nowrap;">
         </div>
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; width:100%; min-width:100px; font-size: smaller;">
-          <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
-            <button style="display:flex; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;" name="watch" type="button" title="Add to watch list">Watch</button>
-          </div> 
-          <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start; box-sizing:border-box;">
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;" name="edit" type="submit" style="display:flex;width:fit-content; text-wrap:nowrap; min-width:4px;" >Edit</button>
-            <div id="${id}Push" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
-              <div style="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;"><input type="text" name="${id}Indx" style="border:none;width:100%; padding:0px;" placeholder="Index" title="For objects only" /></div>
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; text-wrap:nowrap; width:fit-content; min-width:4px;" name="push" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OR OBJECTS OF LEAF NODES. IE THE ONLY DATA IN THE OBJECT OR ARRAY ARE SCALAR VALUES. For objects, requires an index value">Push</button>
-            </div>
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;text-wrap:nowrap; width:fit-content; min-width:4px;" name="pop" type="submit" style="display:flex;width:fit-content;" title="ONLY FOR ARRAYS OF LEAF NODES. IE THE ONLY DATA IN THE ARRAY ARE SCALAR VALUES.">Pop</button>
-          </div>
+        <div id="${id}LftPnlBtns" style="display:flex; align-items:flex-start; justify-content:space-between; width:100%; min-width:100px; font-size: smaller;">
+          &nbsp;
         </div>
       </div>
       <div class="${id}RghtPnl" style="display:flex; border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
