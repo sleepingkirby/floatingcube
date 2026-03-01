@@ -357,12 +357,22 @@ const tp={
   'number':'number'
 }
 
+let inpt=null;
+let slct=null;
+let dv=null;
+let edt=null;
+let btnDv=null;
+let wtch=null;
+let psh=null;
+let actnDv=null;
+let pop=null;
+
   switch(varEvl.type){
     case 'number':
     case 'string':
     case 'boolean':
 
-    const wtch=document.createElement('button');
+    wtch=document.createElement('button');
     wtch.style.cssText="display:flex; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;";
     wtch.name="watch";
     wtch.type="button";
@@ -373,24 +383,22 @@ const tp={
     wtch.setAttribute('varType',varEvl.type);
     wtch.setAttribute('varAction','watch');
 
-    let inpt=null;
-    let slct=null;
-    let dv=null;
-    console.log(varEvl);
-
       //input field
       if(varEvl.type=='number'||varEvl.type=='string'){
       inpt=document.createElement('input');
       inpt.value=varEvl.val;
-      inpt.style.cssText="border:none;width:100%; padding:0px;";
+      inpt.style.cssText="border:none;padding:0px;width:60px;";
       inpt.name=`${id}EdtValNm`;
       inpt.title="Value to be edited";
       inpt.setAttribute('varVal',varEvl.val);
       inpt.type=tp[varEvl.type];
 
-      dv=document.createElement('div');
-      dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
-      dv.appendChild(inpt);
+        if(varEvl.type=='string'){
+        inpt.style.width='100%';
+        dv=document.createElement('div');
+        dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
+        dv.appendChild(inpt);
+        }
       }
       //boolean
       else if(varEvl.type=='boolean'){
@@ -411,9 +419,9 @@ const tp={
       slct.style.cssText="display:flex;padding:0px;box-sizing:border-box;";
       }
    
-    const edt=document.createElement('button');
+    edt=document.createElement('button');
     edt.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
-    edt.type="submit";
+    edt.type="button";
     edt.name="Edit";
     edt.title="Add to edit list";
     edt.innerText="Edit";
@@ -423,23 +431,79 @@ const tp={
     edt.setAttribute('varAction','edit');
     edt.setAttribute('varValueName',`${id}EdtValNm`);
 
-    const btnDv=document.createElement('div');
+    btnDv=document.createElement('div');
     btnDv.style.cssText="display:flex;flex-direction:row;justify-content:flex-end;align-items:center;box-sizing:border-box;";
       if(varEvl.type=="boolean"){
       btnDv.appendChild(slct);
       btnDv.appendChild(edt);
       }
-      else{
+      else if(varEvl.type=='string'){
       btnDv.appendChild(dv);
       btnDv.appendChild(edt);
       }
-
+      else if(varEvl.type=='number'){
+      btnDv.appendChild(inpt);
+      btnDv.appendChild(edt);
+      }
     cntnr.appendChild(wtch);
     cntnr.appendChild(btnDv);
     break;
 
+
     case 'array':
-    
+    inpt=document.createElement('input');
+    inpt.value=varEvl.val;
+    inpt.style.cssText="border:none;width:100%; padding:0px;";
+    inpt.name=`${id}EdtValNm`;
+    inpt.title="Value to be pushed";
+    inpt.setAttribute('varVal',varEvl.val);
+    inpt.type=tp[varEvl.type];
+
+    dv=document.createElement('div');
+    dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
+    dv.appendChild(inpt);
+
+    psh=document.createElement('button');
+    psh.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
+    psh.type="button";
+    psh.name="Push";
+    psh.title="Add push to edit list";
+    psh.innerText="Push";
+    psh.setAttribute('varName',varNm);
+    psh.setAttribute('varPath',path);
+    psh.setAttribute('varType',varEvl.type);
+    psh.setAttribute('varAction','edit');
+    psh.setAttribute('varValueName',`${id}EdtValNm`);
+
+    pop=document.createElement('button');
+    pop.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
+    pop.type="button";
+    pop.name="Pop";
+    pop.title="Add pop to edit list";
+    pop.innerText="Pop";
+    pop.setAttribute('varName',varNm);
+    pop.setAttribute('varPath',path);
+    pop.setAttribute('varType',varEvl.type);
+    pop.setAttribute('varAction','edit');
+
+
+    btnDv=document.createElement('div');
+    btnDv.style.cssText="display:flex;flex-direction:row;justify-content:flex-end;align-items:center;box-sizing:border-box;";
+    btnDv.appendChild(dv);
+    btnDv.appendChild(psh);
+
+    actnDv=document.createElement('div');
+    actnDv.style.cssText="display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-end;box-sizing:border-box;";
+    actnDv.appendChild(btnDv);
+    actnDv.appendChild(pop);
+
+    //was watch button, repurposing for spacer
+    wtch=document.createElement('div');
+    wtch.style.display='flex';
+
+    cntnr.appendChild(wtch);
+    cntnr.appendChild(actnDv);
+
 
     break;
 
@@ -459,8 +523,6 @@ function clckLstnFunc(e){
   //refreshing sc as default action
   sc=window.wrappedJSObject[data.global.startVar];
   XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
-
-  console.log(e.target);
 
   switch(e.target.getAttribute('clickAction')){
     case 'updatePath':
