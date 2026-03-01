@@ -144,12 +144,11 @@ pre:
 post:
 populate variable path
 --------------------------*/
-function ppltPth(str, elId=null){
-  if(!elId){
-  return null;
-  }
+function ppltPth(str, eId=null){
+const elId=eId||`${id}LftPnlPth`
 const el=document.getElementById(elId);
 el.innerText=str;
+el.scrollLeft=el.scrollLeftMax;
 }
 
 /*---------------------------
@@ -362,11 +361,9 @@ function clckLstnFunc(e){
       if(!vl){
       return null;
       }
+    document.getElementById(`${id}VarFltr`).value='';
     const v=evalSgrCbVar(path,vl);
-    console.log(`>>>>>>>>>>>>>>>>>>>${vl}`);
-    console.log(v);
       if(v.leaf){
-      //update buttons/gui
       updtVarSlct(vl, v);
       }
 
@@ -527,7 +524,7 @@ return 0;
           <div id="${id}VarFltrBtn" style="display:flex; cursor:pointer; margin:0px 6px 0px 6px;">🔎</div>
         </div>
         <div style="align-items:center; width:100%; min-width:100px; padding:4px 2px 4px 2px; box-sizing:border-box; border-bottom:1px solid; font-size:smaller; display:flex; justify-content:flex-start; align-items:center; overflow:auto;" id="${id}LftPnlPth">
-          State.active.variable
+          State.active.variables
         </div>
         <div id="${id}LftPnlVarLst" style="display:flex; align-items:stretch; width:100%; min-width:100px; border-bottom:1px solid; flex-direction:column; font-size: smaller; max-height:350px; overflow:auto;">
          none (reload) 
