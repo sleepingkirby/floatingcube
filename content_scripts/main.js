@@ -155,6 +155,7 @@ el.innerText=str;
 /*---------------------------
 pre:
 post:
+default split path
 ---------------------------*/
 function spltPth(pth=null){
   if(!pth){
@@ -162,6 +163,36 @@ function spltPth(pth=null){
   }
 return pth.split('.');
 }
+
+/*---------------------------
+pre:
+post:
+default split path
+---------------------------*/
+function addPth(vl=null){
+  if(!vl){
+  return null;
+  }
+  path+='.'+vl
+return path;
+}
+
+/*---------------------------
+pre: data.global.startVar
+post:
+pop from path. A function to add safe guards
+---------------------------*/
+function popPth(){
+let pthArr=path.split('.');
+pthArr.pop();
+  if(pthArr<=0){
+  pthArr=[data.global.startVar];
+  }
+path=pthArr.join('.');
+return path;
+}
+
+
 
 /*-------------------------------------------------------
 pre: none
@@ -179,7 +210,6 @@ let cur=v
     if(indx==d.global.startVar){
     continue;
     }
-    
     cur=cur[indx];
   }
 
@@ -193,7 +223,7 @@ post: none
 determine if is scalar. Scalar is only numner, string or boolean
 ----------------------------------------------*/
 function isScalar(val=null){
-  switch(val){
+  switch(typeof val){
     case 'number':
     return true;
     break;
@@ -210,29 +240,31 @@ function isScalar(val=null){
 return false; 
 }
 
-/*----------------------------------------------
+/*---------------------------------------------------------------------------------------------------------------------------
 pre: trvsPthInVar(), global sc var, global data var
 post: none
 evaluates the sugarcube variable. Returns one of
-----------------------------------------------*/
-function evalSgrCbVar(pthArr=null, varNm=null){
+
+*NOTE* SugarCube.State and SugarCube.State.active get weird
+
+SugarCube.State, in this plugin, will not you list its children.
+---------------------------------------------------------------------------------------------------------------------------*/
+function evalSgrCbVar(path=null, varNm=null){
   const evl={
   'type':null,
   'leaf':null,
   }
 
   //bad values
-  if(!pthArr){
+  if(!path){
   return evl;
   }
 
-let cur=trvsPthInVar(sc,pthArr,data);
+const pthArr=spltPth(path);
   if(varNm){
-    if(!cur.hasOwnProperty(varNm)){
-    return evl;
-    }
-    cur=cur[varNm];
+    pthArr.push(varNm);
   }
+let cur=trvsPthInVar(sc,pthArr,data);
 
   //if array, if any member of the array is NOT scalar, i.e. not number, string or boolean, not a leaf
   if(Array.isArray(cur)){
@@ -240,7 +272,7 @@ let cur=trvsPthInVar(sc,pthArr,data);
   evl.leaf=true;
     for(const a of cur){
       //if any not scalar, is not leaf
-      if(!isScalar(a)){
+      if(!isScalar(cur[a])){
       evl.leaf=false;
       return evl;
       } 
@@ -250,12 +282,27 @@ let cur=trvsPthInVar(sc,pthArr,data);
 
   if(typeof cur=="object"){
   evl.type='object';
-  evl.leaf=true;
-    for(const n in cur){
-      if(!isScalar(n)){
-      evl.leaf=false;
-      return evl;
+  evl.leaf=false;
+    /*SugarCube exception
+    SugarCube.State will not let you access/list its children and/or indexes properly.
+    So, to safeguard against unable to access being seen as a leaf node
+    assume all are NOT leaf nodes until otherwise proven. And, to do that
+    check ALL members of an object to see if its true. Then and only then
+    is it actually true.
+    */
+    let flag=null;
+    for(const n of Object.keys(cur)){
+      if(isScalar(cur[n])){
+      flag=true;
       }
+      else{
+      flag=false;
+      break;
+      }
+    }
+    if(flag==true){
+    evl.leaf=true;
+    return evl;
     }
   return evl;
   }
@@ -284,24 +331,35 @@ function clckLstnFunc(e){
 
   switch(e.target.getAttribute('clickAction')){
     case 'updatePath':
-    console.log(e.target);
+    const vl=e.target.getAttribute('varname');
+      if(!vl){
+      return null;
+      }
     /*
     if is leaf
       update display and give the option to add to edit or watch list.
     if is obj or array, update path and ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr')
-    */  
-    break;
-    //
-    case 'backPath':
-    const pthArr=spltPth(path);
-      console.log(path);
-      if(pthArr.length>1){
-      pthArr.pop();
-      path=pthArr.join('.');
+    */
+    const v=evalSgrCbVar(path,vl);
+      if(v.leaf){
+      //update buttons/gui
+      return null;
+      }
+
+      if(v.type=="object"||v.type=="array"){
+      addPth(vl);
       ppltPth(path,`${id}LftPnlPth`);//set current path
       ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
+      return null;
       }
     break;
+
+    case 'backPath':
+    popPth();
+    ppltPth(path,`${id}LftPnlPth`);//set current path
+    ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
+    break;
+
     default:
     ppltVarDpth(path, data, id+'LftPnlVarLst', id+'VarFltr');
     break;
@@ -364,7 +422,7 @@ let varArr=Object.keys(cur);
 //filter
 const fltr=document.getElementById(fltrEl);
   if(fltr.value && fltr.value!=""){
-  varArr=varArr.filter(e=>e.includes(fltr.value));
+  varArr=varArr.filter(e=>e.toLocaleLowerCase().includes(fltr.value.toLocaleLowerCase()));
   }
 
 varArr.sort();//sorting for ease of lookup
@@ -372,16 +430,9 @@ varArr.sort();//sorting for ease of lookup
 //filling populating elId with var names
 el.innerHTML='';
 
-  //if none. display none
-  if(varArr.length<=0){
-  el.innerText='No Results';
-  return 0;
-  }
-
-
 let tmpEl=null;
 //back button only if there's more than 1 element in path
-  if(path.length>1){
+  if(pthArr.length>1){
   tmpEl=document.createElement('div');
   tmpEl.innerText='<< BACK';
   tmpEl.setAttribute('clickAction', 'backPath');
@@ -390,6 +441,31 @@ let tmpEl=null;
   tmpEl.style.cssText=cssText.dehighlight;
   el.appendChild(tmpEl);
   }
+
+  /*
+  exception for Sugar.State since it doesn't let you view it's members
+  */
+  if(pthArr[0]=="SugarCube"&&pthArr[1]=="State"&&pthArr.length==2){
+  tmpEl=document.createElement('div');
+  tmpEl.innerText='active';
+  tmpEl.setAttribute('clickAction', 'updatePath');
+  tmpEl.setAttribute('mouseOverAction', 'highlight');
+  tmpEl.setAttribute('mouseOutAction', 'dehighlight');
+  tmpEl.setAttribute('varName','active');
+  tmpEl.style.cssText=cssText.dehighlight;
+  el.appendChild(tmpEl);
+  return 0;
+  }
+
+
+  //if none. display none
+  if(varArr.length<=0){
+  tmpEl=document.createElement('div');
+  tmpEl.innerText='No Results';
+  el.appendChild(tmpEl);
+  return 0;
+  }
+
   for(const val of varArr){
   tmpEl=document.createElement('div');
   tmpEl.innerText=val;
@@ -432,6 +508,9 @@ return 0;
          none (reload) 
         </div>
         <div style="display:flex; align-items:flex-start; justify-content:space-between; width:100%; min-width:100px; font-size: smaller;">
+          <div style="display:flex; flex-direction:row; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
+          &nbsp;
+          </div>
           <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; box-sizing:border-box;">
             <button style="display:flex; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;" name="watch" type="button" title="Add to watch list">Watch</button>
           </div> 
