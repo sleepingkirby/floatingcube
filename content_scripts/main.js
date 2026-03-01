@@ -340,7 +340,7 @@ infoEl.innerText=`${varNm}(${varEvl.type})`;
 el.innerHTML='';
 
 el.appendChild(infoEl);
-
+el.scrollLeft=el.scrollLeftMax
 return infoEl;
 }
 
