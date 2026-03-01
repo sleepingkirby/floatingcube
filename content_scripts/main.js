@@ -351,6 +351,12 @@ generate elements for each variable type. This does NOT check if the
 -------------------------------------------------------------------------------*/
 function applyLftBtn(varNm, varEvl, eId=null){
 const elId=eId||`${id}LftPnlBtns`;
+const cntnr=document.getElementById(elId);
+const tp={
+  'string':'text',
+  'number':'number'
+}
+
   switch(varEvl.type){
     case 'number':
     case 'string':
@@ -367,6 +373,44 @@ const elId=eId||`${id}LftPnlBtns`;
     wtch.setAttribute('varType',varEvl.type);
     wtch.setAttribute('varAction','watch');
 
+    let inpt=null;
+    let slct=null;
+    let dv=null;
+    console.log(varEvl);
+
+      //input field
+      if(varEvl.type=='number'||varEvl.type=='string'){
+      inpt=document.createElement('input');
+      inpt.value=varEvl.val;
+      inpt.style.cssText="border:none;width:100%; padding:0px;";
+      inpt.name=`${id}EdtValNm`;
+      inpt.title="Value to be edited";
+      inpt.setAttribute('varVal',varEvl.val);
+      inpt.type=tp[varEvl.type];
+
+      dv=document.createElement('div');
+      dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
+      dv.appendChild(inpt);
+      }
+      //boolean
+      else if(varEvl.type=='boolean'){
+      slct=document.createElement('select');
+      let opt=document.createElement('option');
+      opt.value=true;
+      opt.innerText=true;
+      slct.appendChild(opt);
+      opt=document.createElement('option');
+      opt.value=false;
+      opt.innerText=false;
+      slct.appendChild(opt);
+
+      slct.value=varEvl.val;
+      slct.name=`${id}EdtValNm`;
+      slct.title="Value to be edited";
+      slct.setAttribute('varVal',varEvl.val);
+      slct.style.cssText="display:flex;padding:0px;box-sizing:border-box;";
+      }
+   
     const edt=document.createElement('button');
     edt.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
     edt.type="submit";
@@ -377,14 +421,26 @@ const elId=eId||`${id}LftPnlBtns`;
     edt.setAttribute('varPath',path);
     edt.setAttribute('varType',varEvl.type);
     edt.setAttribute('varAction','edit');
-    edt.setAttribute('varVal',varEvl.val);
+    edt.setAttribute('varValueName',`${id}EdtValNm`);
 
-    const cntnr=document.getElementById(elId);
-    console.log(`elId: ${elId}`);
-    console.log(cntnr);
-    cntnr.innerHTML='';
+    const btnDv=document.createElement('div');
+    btnDv.style.cssText="display:flex;flex-direction:row;justify-content:flex-end;align-items:center;box-sizing:border-box;";
+      if(varEvl.type=="boolean"){
+      btnDv.appendChild(slct);
+      btnDv.appendChild(edt);
+      }
+      else{
+      btnDv.appendChild(dv);
+      btnDv.appendChild(edt);
+      }
+
     cntnr.appendChild(wtch);
-    cntnr.appendChild(edt);
+    cntnr.appendChild(btnDv);
+    break;
+
+    case 'array':
+    
+
     break;
 
 
@@ -446,6 +502,7 @@ function clckLstnFunc(e){
     case 'backPath':
     popPth();
     document.getElementById(id+'LftPnlVarSlct').innerHTML='';
+    document.getElementById(`${id}LftPnlBtns`).innerHTML='';//clears buttons
     ppltPth(path,`${id}LftPnlPth`);//set current path
     ppltVarDpth(path, data);
     break;
