@@ -13,6 +13,7 @@ const id="extIdNmFltCubeFPnl";
 var path="";
 var sc=null; //will hold the base variable (SugarCube)
 var data=null;//floatingCube data
+var tmpData=null;
 var wht='#AAAAAA';
 var blck='black';
 
@@ -377,6 +378,8 @@ let wtch=null;
 let psh=null;
 let actnDv=null;
 let pop=null;
+let inptVl=null;
+let vlDv=null;
 
   switch(varEvl.type){
     case 'number':
@@ -392,7 +395,7 @@ let pop=null;
     wtch.setAttribute('varName',varNm);
     wtch.setAttribute('varPath',path);
     wtch.setAttribute('varType',varEvl.type);
-    wtch.setAttribute('varAction','watch');
+    wtch.setAttribute('clickAction','watch');
 
       //input field
       if(varEvl.type=='number'||varEvl.type=='string'){
@@ -403,6 +406,7 @@ let pop=null;
       inpt.title="Value to be edited";
       inpt.setAttribute('varVal',varEvl.val);
       inpt.type=tp[varEvl.type];
+      inpt.placeholder="value to be set";
 
         if(varEvl.type=='string'){
         inpt.style.width='100%';
@@ -439,7 +443,7 @@ let pop=null;
     edt.setAttribute('varName',varNm);
     edt.setAttribute('varPath',path);
     edt.setAttribute('varType',varEvl.type);
-    edt.setAttribute('varAction','edit');
+    edt.setAttribute('clickAction','edit');
     edt.setAttribute('varValueName',`${id}EdtValNm`);
 
     btnDv=document.createElement('div');
@@ -462,13 +466,15 @@ let pop=null;
 
 
     case 'array':
+    console.log(varEvl.type);
     inpt=document.createElement('input');
     inpt.value=varEvl.val;
     inpt.style.cssText="border:none;width:100%; padding:0px;";
     inpt.name=`${id}EdtValNm`;
     inpt.title="Value to be pushed";
     inpt.setAttribute('varVal',varEvl.val);
-    inpt.type=tp[varEvl.type];
+    inpt.type="text";
+    inpt.placeholder="value to be pushed";
 
     dv=document.createElement('div');
     dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
@@ -483,7 +489,7 @@ let pop=null;
     psh.setAttribute('varName',varNm);
     psh.setAttribute('varPath',path);
     psh.setAttribute('varType',varEvl.type);
-    psh.setAttribute('varAction','edit');
+    psh.setAttribute('clickAction','edit');
     psh.setAttribute('varValueName',`${id}EdtValNm`);
 
     pop=document.createElement('button');
@@ -495,7 +501,7 @@ let pop=null;
     pop.setAttribute('varName',varNm);
     pop.setAttribute('varPath',path);
     pop.setAttribute('varType',varEvl.type);
-    pop.setAttribute('varAction','edit');
+    pop.setAttribute('clickAction','edit');
 
 
     btnDv=document.createElement('div');
@@ -517,17 +523,33 @@ let pop=null;
     break;
 
     case 'object':
+//Push row of buttons
     inpt=document.createElement('input');
     inpt.value=varEvl.val;
     inpt.style.cssText="border:none;width:100%; padding:0px;";
-    inpt.name=`${id}EdtValNm`;
-    inpt.title="Value to be pushed";
+    inpt.name=`${id}PshIndxNm`;
+    inpt.title="Index to be set";
     inpt.setAttribute('varVal',varEvl.val);
     inpt.type=tp[varEvl.type];
+    inpt.placeholder="index to be set";
+
+    inptVl=document.createElement('input');
+    inptVl.value=varEvl.val;
+    inptVl.style.cssText="border:none;width:100%; padding:0px;";
+    inptVl.name=`${id}PshValNm`;
+    inptVl.title="Value to be pushed";
+    inptVl.setAttribute('varVal',varEvl.val);
+    inptVl.type=tp[varEvl.type];
+    inptVl.placeholder="Value to be set";
 
     dv=document.createElement('div');
     dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
     dv.appendChild(inpt);
+
+    vlDv=document.createElement('div');
+    vlDv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
+    vlDv.appendChild(inptVl);
+
 
     psh=document.createElement('button');
     psh.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
@@ -538,16 +560,52 @@ let pop=null;
     psh.setAttribute('varName',varNm);
     psh.setAttribute('varPath',path);
     psh.setAttribute('varType',varEvl.type);
-    psh.setAttribute('varAction','edit');
-    psh.setAttribute('varValueName',`${id}EdtValNm`);
+    psh.setAttribute('clickAction','edit');
+    psh.setAttribute('varIndexName',`${id}PshIndxNm`);
+    psh.setAttribute('varValueName',`${id}PshValNm`);
 
     btnDv=document.createElement('div');
     btnDv.style.cssText="display:flex;flex-direction:row;justify-content:flex-end;align-items:center;box-sizing:border-box;";
     btnDv.appendChild(dv);
+    btnDv.appendChild(vlDv);
     btnDv.appendChild(psh);
 
     actnDv=document.createElement('div');
     actnDv.style.cssText="display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-end;box-sizing:border-box;";
+    actnDv.appendChild(btnDv);
+
+
+  //Pop row of buttons
+    inpt=document.createElement('input');
+    inpt.value=varEvl.val;
+    inpt.style.cssText="border:none;width:100%; padding:0px;";
+    inpt.name=`${id}PopIndxNm`;
+    inpt.title="Index to be set";
+    inpt.setAttribute('varVal',varEvl.val);
+    inpt.type=tp[varEvl.type];
+    inpt.placeholder="index to be set";
+
+    dv=document.createElement('div');
+    dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
+    dv.appendChild(inpt);
+
+    pop=document.createElement('button');
+    pop.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
+    pop.type="button";
+    pop.name="Delete";
+    pop.title="Add delete to edit list";
+    pop.innerText="Del";
+    pop.setAttribute('varName',varNm);
+    pop.setAttribute('varPath',path);
+    pop.setAttribute('varType',varEvl.type);
+    pop.setAttribute('clickAction','edit');
+    pop.setAttribute('varIndexName',`${id}PshIndxNm`);
+
+    btnDv=document.createElement('div');
+    btnDv.style.cssText="display:flex;flex-direction:row;justify-content:flex-end;align-items:center;box-sizing:border-box;";
+    btnDv.appendChild(dv);
+    btnDv.appendChild(pop);
+
     actnDv.appendChild(btnDv);
 
     //was watch button, repurposing for spacer
@@ -575,6 +633,12 @@ function clckLstnFunc(e){
   XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
 
   switch(e.target.getAttribute('clickAction')){
+
+    case 'watch':
+    const el=e.target
+    addWtch(el); 
+    break;
+
     case 'updatePath':
     const vl=e.target.getAttribute('varname');
       if(!vl){
@@ -584,25 +648,8 @@ function clckLstnFunc(e){
     document.getElementById(`${id}LftPnlBtns`).innerHTML='';//clears buttons
     const v=evalSgrCbVar(path,vl);
 
-    console.log(v);
-
       if(v.leaf){
       updtVarSlct(vl, v);
-      /*
-      update buttons by v.type;
-      watch button only exists for scalar values
-        v.val will be not null if this is the case
-      
-      if scalar
-        input field for value (number or string input. drop down for true/false for boolean) and an Edit button
-
-      if Array
-        input field for val to push
-        button to pop
-
-      if Object
-        input field for index and for val to push
-      */
       applyLftBtn(vl, v);
       }
 
@@ -623,6 +670,7 @@ function clckLstnFunc(e){
     break;
 
     default:
+    drwWtch();
     ppltVarDpth(path, data);
     break;
   }
@@ -661,87 +709,157 @@ function mouseOutLstnFunc(e){
 }
 
 
-/*--------------------------
-pre: glocal var sc
-post:
-populate the element with the variables/index of the current level.
-path needs to be at an object or array. NOT SCALAR
---------------------------*/
-function ppltVarDpth(path, d, eId=null, fId=null){
-//id+'LftPnlVarLst', id+'VarFltr'
-const elId=eId||`${id}LftPnlVarLst`;
-const fltrId=fId||`${id}VarFltr`;
-const el=document.getElementById(elId);
-  if(!el){
-  return null;
-  }
-
-const pthArr=spltPth(path);
-const cur=trvsPthInVar(sc, pthArr, d);
-
-let varArr=cur?Object.keys(cur):[];
-
-//filter
-const fltr=document.getElementById(fltrId);
-  if(fltr&&fltr.value&&fltr.value!=""){
-  varArr=varArr.filter(e=>e.toLocaleLowerCase().includes(fltr.value.toLocaleLowerCase()));
-  }
-
-varArr.sort();//sorting for ease of lookup
-
-//filling populating elId with var names
-el.innerHTML='';
-
-let tmpEl=null;
-//back button only if there's more than 1 element in path
-  if(pthArr.length>1){
-  tmpEl=document.createElement('div');
-  tmpEl.innerText='<< BACK';
-  tmpEl.setAttribute('clickAction', 'backPath');
-  tmpEl.setAttribute('mouseOverAction', 'highlight');
-  tmpEl.setAttribute('mouseOutAction', 'dehighlight');
-  tmpEl.style.cssText=cssText.dehighlight;
-  el.appendChild(tmpEl);
-  }
-
-  /*
-  exception for Sugar.State since it doesn't let you view it's members
-  */
-  if(pthArr[0]=="SugarCube"&&pthArr[1]=="State"&&pthArr.length==2){
-  tmpEl=document.createElement('div');
-  tmpEl.innerText='active';
-  tmpEl.setAttribute('clickAction', 'updatePath');
-  tmpEl.setAttribute('mouseOverAction', 'highlight');
-  tmpEl.setAttribute('mouseOutAction', 'dehighlight');
-  tmpEl.setAttribute('varName','active');
-  tmpEl.style.cssText=cssText.dehighlight;
-  el.appendChild(tmpEl);
-  return 0;
-  }
-
-
-  //if none. display none
-  if(varArr.length<=0){
-  tmpEl=document.createElement('div');
-  tmpEl.innerText='No Results';
-  el.appendChild(tmpEl);
-  return 0;
-  }
-
-  for(const val of varArr){
-  tmpEl=document.createElement('div');
-  tmpEl.innerText=val;
-  tmpEl.setAttribute('clickAction', 'updatePath');
-  tmpEl.setAttribute('mouseOverAction', 'highlight');
-  tmpEl.setAttribute('mouseOutAction', 'dehighlight');
-  tmpEl.setAttribute('varName',val);
-  tmpEl.style.cssText=cssText.dehighlight;
+  /*--------------------------
+  pre: glocal var sc
+  post:
+  populate the element with the variables/index of the current level.
+  path needs to be at an object or array. NOT SCALAR
+  --------------------------*/
+  function ppltVarDpth(path, d, eId=null, fId=null){
+  //id+'LftPnlVarLst', id+'VarFltr'
+  const elId=eId||`${id}LftPnlVarLst`;
+  const fltrId=fId||`${id}VarFltr`;
+  const el=document.getElementById(elId);
+    if(!el){
+    return null;
+    }
   
-  el.appendChild(tmpEl);
+  const pthArr=spltPth(path);
+  const cur=trvsPthInVar(sc, pthArr, d);
+  
+  let varArr=cur?Object.keys(cur):[];
+  
+  //filter
+  const fltr=document.getElementById(fltrId);
+    if(fltr&&fltr.value&&fltr.value!=""){
+    varArr=varArr.filter(e=>e.toLocaleLowerCase().includes(fltr.value.toLocaleLowerCase()));
+    }
+  
+  varArr.sort();//sorting for ease of lookup
+  
+  //filling populating elId with var names
+  el.innerHTML='';
+  
+  let tmpEl=null;
+  //back button only if there's more than 1 element in path
+    if(pthArr.length>1){
+    tmpEl=document.createElement('div');
+    tmpEl.innerText='<< BACK';
+    tmpEl.setAttribute('clickAction', 'backPath');
+    tmpEl.setAttribute('mouseOverAction', 'highlight');
+    tmpEl.setAttribute('mouseOutAction', 'dehighlight');
+    tmpEl.style.cssText=cssText.dehighlight;
+    el.appendChild(tmpEl);
+    }
+  
+    /*
+    exception for Sugar.State since it doesn't let you view it's members
+    */
+    if(pthArr[0]=="SugarCube"&&pthArr[1]=="State"&&pthArr.length==2){
+    tmpEl=document.createElement('div');
+    tmpEl.innerText='active';
+    tmpEl.setAttribute('clickAction', 'updatePath');
+    tmpEl.setAttribute('mouseOverAction', 'highlight');
+    tmpEl.setAttribute('mouseOutAction', 'dehighlight');
+    tmpEl.setAttribute('varName','active');
+    tmpEl.style.cssText=cssText.dehighlight;
+    el.appendChild(tmpEl);
+    return 0;
+    }
+  
+  
+    //if none. display none
+    if(varArr.length<=0){
+    tmpEl=document.createElement('div');
+    tmpEl.innerText='No Results';
+    el.appendChild(tmpEl);
+    return 0;
+    }
+  
+    for(const val of varArr){
+    tmpEl=document.createElement('div');
+    tmpEl.innerText=val;
+    tmpEl.setAttribute('clickAction', 'updatePath');
+    tmpEl.setAttribute('mouseOverAction', 'highlight');
+    tmpEl.setAttribute('mouseOutAction', 'dehighlight');
+    tmpEl.setAttribute('varName',val);
+    tmpEl.style.cssText=cssText.dehighlight;
+    
+    el.appendChild(tmpEl);
+    }
+  
+  return 0;
   }
 
-return 0;
-}
+  /*---------------------------------------------------
+  pre: global var sc, data, element id 'WatchEntries'
+  post:
+  draw watch list from tmp data
+  ---------------------------------------------------*/
+  function drwWtch(d=null){
+    const dt=d||tmpData;
+  const wtch=document.getElementById(id+'WatchEntries');
+  wtch.innerHTML='';
+    for(const w of tmpData.watch){
+    const rw=document.createElement('div');
+    rw.style.cssText="display:flex;flex-direction:row;text-wrap:nowrap;justify-content:space-between;align-items:center;padding:0px;margin:0px;box-sizing:border-box;";
+    const dv=document.createElement('div');
+    dv.style.cssText=`display:flex;flex-direction:row;text-wrap:nowrap;justify-content:flex-start;align-items:center;margin:0px 6px 0px 0px;padding:2px;border:0px;box-sizing:border-box;`;
+    dv.title=w.join('.');
+    const val=trvsPthInVar(sc,w,data);   
+    dv.innerText=`${w[w.length-2][0]}.${w[w.length-1]}: `+val;
+    rw.appendChild(dv);
+
+    const btnDv=document.createElement('div');
+    btnDv.style.cssText="display:flex;flex-direction:row;text-wrap:nowrap;justify-content:flex-end;align-items:center;margin:0px;border:0px;box-sizing:border-box;";
+    const btnUp=document.createElement('button');
+    btnUp.style.cssText="display:flex; justify-content:center; align-items:center; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px 0px 0px 3px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;width:18px;";
+    btnUp.innerText='⏶';
+    const btnDwn=document.createElement('button');
+    btnDwn.style.cssText="display:flex; justify-content:center; align-items:center; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px 0px 0px 3px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;width:18px;";
+    btnDwn.innerText='⏷';
+    const del=document.createElement('button');
+    del.style.cssText="display:flex; jutif-content:center; align-items:center; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px 0px 0px 3px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;width:18px;";
+    del.innerText='🗑';
+    btnDv.appendChild(btnUp);
+    btnDv.appendChild(btnDwn);
+    btnDv.appendChild(del);
+    rw.appendChild(btnDv);
+
+    wtch.appendChild(rw);
+    }
+  
+  }
+
+  /*---------------------------------------------------
+  pre: drwWtch()
+  post: draw html
+  add to watch then drwWtch()
+  *NOTE* ONLY WATCH SCALARS. NOT OBJECTS, NOT ARRAYS, SCALARS
+  ---------------------------------------------------*/
+  function addWtch(el){
+    console.log(tmpData);
+  const varObj={
+    'varName':null,
+    'varPath':null,
+    'varType':null
+  };
+    for(const i of Object.keys(varObj)){
+    varObj[i]=el.getAttribute(i);
+    }
+
+    if(varObj['varPath']&&typeof varObj['varPath']){
+    const arr=varObj['varPath'].split('.');
+      if(arr[0]==data.global.startVar){
+      arr.shift();
+      }
+    arr.push(varObj.varName);
+    tmpData.watch.push([ ...arr ]);
+    }
+  console.log(tmpData);
+  drwWtch();
+  }
+
 
 
   /*---------------------------------------------------
@@ -778,14 +896,12 @@ return 0;
       <div class="${id}RghtPnl" style="display:flex; border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
         <div id="${id}Watch" style="flex-direction:column; display:flex; text-shadow:none;">
           <div id="${id}WatchTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Watch</div>
-          <div id="${id}WatchEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
-            <div name="State.active.variable.xp" title="State.active.variable.xp">v.xp: 1000</div>
-            <div name="State.active.variable.money" title="State.active.variable.money">v.money: 1000</div>
+          <div id="${id}WatchEntries" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
           </div>
         </div>
         <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
           <div id="${id}EdtTtl" style="display:flex; background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
-          <div id="${id}EdtEntrys" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
+          <div id="${id}EdtEntries" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
             <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
               <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >set v.xp</button>
               <input type="text" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;" />
@@ -902,6 +1018,9 @@ return 0;
       prflRow.style.maxHeight='80px';
       });
     }
+
+  //draw watches
+  drwWtch();
   
   //filling out profile select
   fillPrflSlct(data,`${id}PrflSlct`); 
@@ -994,7 +1113,7 @@ const dfltStrg={
         'order':[
         0,
         1
-        ],
+        ],//in a bookmark, this is authoritative. Ord is the shallow representation.
         'vars':[
           {
           'path':['State','active','variables','xp'],
@@ -1019,6 +1138,56 @@ const dfltStrg={
   }
 }
 
+const bkmrkTmpl={
+  'order':[],
+  'vars':[
+    {
+    'path':['State','active','variables','xp'],
+    'type':'number',
+    'action':'set',
+    'val':10000,
+    'indx':'indx',
+    'ord':0
+    },
+    {
+    'path':['State','active','variables','item',1],
+    'type':'string',
+    'action':'set',
+    'val':'potion', 
+    'indx':'indx',
+    'ord':1
+    }
+  ]
+}
+
+const tmpl={
+  'bookmark':{
+  'order':[],
+  'vars':[],
+  },
+  'vars':{
+  'path':[],
+  'type':'',
+  'action':'',
+  'val':null,
+  'indx':'',
+  'used':0,
+  'ord':0
+  },
+  'tmpData':{
+    'watch':[
+      ['State','active','variables','money']
+    ],
+    'edit':{
+      'order':[],
+      'vars':[]
+    },
+    'bookmarks':{
+      'order':[],
+      'vars':[]
+    }
+  }
+}
 
   //document.addEventListener("mouseover", mouseOvrEvnt);
   const glblVarNm='fltCubeVar';
@@ -1029,7 +1198,7 @@ const dfltStrg={
     }
   
   data=d;//setting data for global use
-  
+  tmpData={ ...tmpl['tmpData'] }; //for when there's no profile
     if(!d.global.enabled){
     logger('Plugin not enabled.');
     return null;
