@@ -222,6 +222,9 @@ post: none
 determine if is scalar. Scalar is only numner, string or boolean
 ----------------------------------------------*/
 function isScalar(val=null){
+  if(val==undefined||val==null){
+  return false;
+  }
   switch(typeof val){
     case 'number':
     return true;
@@ -266,6 +269,13 @@ const pthArr=spltPth(path);
   }
 let cur=trvsPthInVar(sc,pthArr,data);
 
+
+  //if cur is null. This is needed because typeof null returns object
+  if(cur==undefined||cur==null){
+  evl.leaf=true;
+  return evl;
+  }
+
   //if array, if any member of the array is NOT scalar, i.e. not number, string or boolean, not a leaf
   if(Array.isArray(cur)){
   evl.type='array';
@@ -280,7 +290,7 @@ let cur=trvsPthInVar(sc,pthArr,data);
   return evl;
   }
 
-  if(typeof cur=="object"){
+  if(cur&&typeof cur=="object"){
   evl.type='object';
   evl.leaf=false;
     /*SugarCube exception
@@ -291,6 +301,7 @@ let cur=trvsPthInVar(sc,pthArr,data);
     is it actually true.
     */
     let flag=null;
+    
     for(const n of Object.keys(cur)){
       if(isScalar(cur[n])){
       flag=true;
@@ -503,10 +514,49 @@ let pop=null;
 
     cntnr.appendChild(wtch);
     cntnr.appendChild(actnDv);
-
-
     break;
 
+    case 'object':
+    inpt=document.createElement('input');
+    inpt.value=varEvl.val;
+    inpt.style.cssText="border:none;width:100%; padding:0px;";
+    inpt.name=`${id}EdtValNm`;
+    inpt.title="Value to be pushed";
+    inpt.setAttribute('varVal',varEvl.val);
+    inpt.type=tp[varEvl.type];
+
+    dv=document.createElement('div');
+    dv.style.cssText="width:60px;margin-right:6px;overflow:hidden;resize:horizontal;box-sizing:border-box;border-bottom:1px solid;";
+    dv.appendChild(inpt);
+
+    psh=document.createElement('button');
+    psh.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none; width:fit-content; text-wrap:nowrap; min-width:4px;";
+    psh.type="button";
+    psh.name="Push";
+    psh.title="Add push to edit list";
+    psh.innerText="Push";
+    psh.setAttribute('varName',varNm);
+    psh.setAttribute('varPath',path);
+    psh.setAttribute('varType',varEvl.type);
+    psh.setAttribute('varAction','edit');
+    psh.setAttribute('varValueName',`${id}EdtValNm`);
+
+    btnDv=document.createElement('div');
+    btnDv.style.cssText="display:flex;flex-direction:row;justify-content:flex-end;align-items:center;box-sizing:border-box;";
+    btnDv.appendChild(dv);
+    btnDv.appendChild(psh);
+
+    actnDv=document.createElement('div');
+    actnDv.style.cssText="display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-end;box-sizing:border-box;";
+    actnDv.appendChild(btnDv);
+
+    //was watch button, repurposing for spacer
+    wtch=document.createElement('div');
+    wtch.style.display='flex';
+
+    cntnr.appendChild(wtch);
+    cntnr.appendChild(actnDv);
+    break;
 
     default:
     break;
@@ -533,6 +583,9 @@ function clckLstnFunc(e){
     document.getElementById(`${id}VarFltr`).value='';//clears variable name filter
     document.getElementById(`${id}LftPnlBtns`).innerHTML='';//clears buttons
     const v=evalSgrCbVar(path,vl);
+
+    console.log(v);
+
       if(v.leaf){
       updtVarSlct(vl, v);
       /*
@@ -626,7 +679,7 @@ const el=document.getElementById(elId);
 const pthArr=spltPth(path);
 const cur=trvsPthInVar(sc, pthArr, d);
 
-let varArr=Object.keys(cur);
+let varArr=cur?Object.keys(cur):[];
 
 //filter
 const fltr=document.getElementById(fltrId);
