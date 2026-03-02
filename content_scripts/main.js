@@ -746,6 +746,8 @@ console.log(vars);
 }
 
 
+
+
 /*----------------------------------------------
 pre: drwEdt()
 post: tmpData changed
@@ -763,12 +765,20 @@ const vr={ ...tmpl['vars'] };
   'used':0,
   'ord':0
   }
+    psh.innerText="Push";
+    psh.setAttribute('varName',varNm);
+    psh.setAttribute('varPath',path);
+    psh.setAttribute('varType',varEvl.type);
+    psh.setAttribute('clickAction','edit');
+    psh.setAttribute('varValueName',`${id}EdtValNm`);
+    psh.setAttribute('varIndexName',`${id}PshIndxNm`);
 */
 const varObj={
   'varPath':null,
   'varName':null,
   'varType':null,
   'varValueName':null,
+  'varIndexName':null  
 }
 
   for(const i of Object.keys(varObj)){
@@ -776,6 +786,7 @@ const varObj={
   }
 
 const valEl=document.getElementsByName(varObj['varValueName'])[0];
+const indxEl=document.getElementsByName(varObj['varIndexName'])[0];
 const pthArr=varObj['varPath'].split('.');
   if(pthArr[0]==data.global.startVar){
   pthArr.shift();
@@ -788,6 +799,7 @@ vr.path=pthArr;
 vr.type=varObj['varType'];
 vr.action='edit';
 vr.val=valEl.value;
+vr.indx=indxEl.value;
 
 console.log(vr);
 const len=tmpData.edit.vars.push(vr);
