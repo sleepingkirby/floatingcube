@@ -753,16 +753,18 @@ post: tmpData changed
 ----------------------------------------------*/
 function srtVars(vars==null){
 const arr=vars||tmpData.edit.vars;
-let obj={};
+let obj={}; //used=>id
   for(const i in arr){
   obj[arr[i].used]=i;
   }
-const lst=Object.keys(obj).sort((a,b)=>Number(b)-Number(a));
+const lst=Object.keys(obj).sort((a,b)=>Number(b)-Number(a)); //used in order of largest to smallest
 
 const order=[];
 
-  for(const i of lst){
-  order.push(obj[i]);
+  for(const i in lst){
+  const id=obj[lst[i]];
+  order.push(id);
+  tmpData.edit.vars[id].ord=i; //writing order back to object for easier access/lookup
   }
 
 console.log(order);
