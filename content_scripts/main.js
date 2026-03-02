@@ -694,15 +694,23 @@ rw.style.cssText="display:flex; flex-direction:row; justify-content:space-betwee
     break;
 
     case 'number':
+    rw.innerText="number";
+    return rw;
     break;
 
     case 'boolean':
+    rw.innerText="bool";
+    return rw;
     break;
 
     case 'array': //push value or pop from array
+    rw.innerText="array";
+    return rw;
     break;
 
     case 'object': //push value w/ index or del entry (via index) fro obj
+    rw.innerText="object";
+    return rw;
     break;
 
     default:
@@ -739,8 +747,9 @@ console.log(vars);
 
 
 /*----------------------------------------------
-pre:
-post:
+pre: drwEdt()
+post: tmpData changed
+
 ----------------------------------------------*/
 function addEdt(el){
 const vr={ ...tmpl['vars'] };
@@ -783,6 +792,9 @@ vr.val=valEl.value;
 console.log(vr);
 const len=tmpData.edit.vars.push(vr);
 console.log(tmpData.edit);
+console.log(len);
+//temp
+tmpData.edit.order.push(len-1);
 //sortEdts();
 drwEdt();
 }
