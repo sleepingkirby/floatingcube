@@ -747,11 +747,27 @@ console.log(vars);
 
 
 /*----------------------------------------------
-pre: 
+pre: tmpData.edit.vars(optional)
 post: tmpData changed
 
 ----------------------------------------------*/
-function srtVars(el){
+function srtVars(vars==null){
+const arr=vars||tmpData.edit.vars;
+let obj={};
+  for(const i in arr){
+  obj[arr[i].used]=i;
+  }
+const lst=Object.keys(obj).sort((a,b)=>Number(b)-Number(a));
+
+const order=[];
+
+  for(const i of lst){
+  order.push(obj[i]);
+  }
+
+console.log(order);
+
+//tmpData.edit.order=order;
 }
 
 /*----------------------------------------------
