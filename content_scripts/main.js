@@ -622,6 +622,172 @@ let vlDv=null;
 }
 
 /*----------------------------------------------
+pre:
+post:
+gen names for buttons of paths.
+i.e.
+  path: [ 
+    0: "State"
+    1: "active"
+    2: "variables"
+    3: "lastName"
+  ]
+
+generate "v.lastName"
+----------------------------------------------*/
+function genVarNmFrmPth(pthArr){
+const w=pthArr;
+return `${w[w.length-2][0]}.${w[w.length-1]}`;
+}
+
+/*----------------------------------------------
+pre:
+post:
+gen edit row buttons
+  {
+  action: "edit"
+  indx: ""
+  ord: 0
+  path: [ 
+    0: "State"
+    1: "active"
+    2: "variables"
+    3: "lastName"
+  ]
+  type: "string"
+  used: 0
+  val: "Silk"
+  }
+----------------------------------------------*/
+function genEdtBtns(v,varId){
+const rw=document.createElement('div');
+rw.title=v.path.join('.');
+rw.name=v.path.join('.');
+rw.style.cssText="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;";
+ 
+  switch(v.type){
+    case 'string':
+      const setBtn=document.createElement('button');
+      setBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;";
+      setBtn.type='button';
+      setBtn.name=`${id}EdtItmId.${varId}`;
+      setBtn.setAttribute('varVal',`${id}EdtItmVal.${varId}`);
+      setBtn.innerText='set '+genVarNmFrmPth(v['path']);
+      rw.appendChild(setBtn);
+
+      const inpt=document.createElement('input');
+      inpt.type='text';
+      inpt.name=`${id}EdtItmVal.${varId}`;
+      inpt.placeholder='value to set';
+      inpt.style.cssText="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
+      inpt.value=v.val;
+      rw.appendChild(inpt);
+
+      const delBtn=document.createElement('button');
+      delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
+      delBtn.type='submit';
+      delBtn.name=`${id}EdtItmDel.${varId}`;
+      delBtn.title='remove';
+      delBtn.innerText='🗑';
+      rw.appendChild(delBtn);
+      return rw;
+    break;
+
+    case 'number':
+    break;
+
+    case 'boolean':
+    break;
+
+    case 'array': //push value or pop from array
+    break;
+
+    case 'object': //push value w/ index or del entry (via index) fro obj
+    break;
+
+    default:
+    break;
+  }
+
+
+}
+
+/*----------------------------------------------
+pre:
+post:
+Draw edit rows
+----------------------------------------------*/
+function drwEdt(){
+const edt=tmpData.edit;
+const vars=edt.vars;
+const drwEl=document.getElementById(`${id}EdtEntries`);
+drwEl.innerHTML='';
+
+console.log(edt.order);
+console.log(vars);
+
+  for(const i of edt.order){
+  console.log(i);
+  const v=vars[i];
+  
+  const btns=genEdtBtns(v,i);
+
+  drwEl.appendChild(btns);
+  }
+  
+}
+
+
+/*----------------------------------------------
+pre:
+post:
+----------------------------------------------*/
+function addEdt(el){
+const vr={ ...tmpl['vars'] };
+/*
+{
+  'path':[],
+  'type':'',
+  'action':'',
+  'val':null,
+  'indx':'',//not used for scalars
+  'used':0,
+  'ord':0
+  }
+*/
+const varObj={
+  'varPath':null,
+  'varName':null,
+  'varType':null,
+  'varValueName':null,
+}
+
+  for(const i of Object.keys(varObj)){
+  varObj[i]=el.getAttribute(i);
+  }
+
+const valEl=document.getElementsByName(varObj['varValueName'])[0];
+const pthArr=varObj['varPath'].split('.');
+  if(pthArr[0]==data.global.startVar){
+  pthArr.shift();
+  }
+  if(varObj.varName){
+  pthArr.push(varObj.varName);
+  }
+
+vr.path=pthArr;
+vr.type=varObj['varType'];
+vr.action='edit';
+vr.val=valEl.value;
+
+console.log(vr);
+const len=tmpData.edit.vars.push(vr);
+console.log(tmpData.edit);
+//sortEdts();
+drwEdt();
+}
+
+/*----------------------------------------------
 pre: (global) data
 post:
 Click listener function for the float panel (or more)
@@ -631,7 +797,6 @@ function clckLstnFunc(e){
   //refreshing sc as default action
   sc=window.wrappedJSObject[data.global.startVar];
   XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
-  console.log("Clicked");
 
   switch(e.target.getAttribute('clickAction')){
 
@@ -649,6 +814,10 @@ function clckLstnFunc(e){
 
     case 'watchDel':
     delWtch(e.target);
+    break;
+
+    case 'edit':
+    addEdt(e.target);
     break;
 
     case 'updatePath':
@@ -820,7 +989,7 @@ function mouseOutLstnFunc(e){
     dv.style.cssText=`display:flex;flex-direction:row;text-wrap:nowrap;justify-content:flex-start;align-items:center;margin:0px 6px 0px 0px;padding:2px;border:0px;box-sizing:border-box;`;
     dv.title=w[i].join('.');
     const val=trvsPthInVar(sc,w[i],data);   
-    dv.innerText=`${w[i][w[i].length-2][0]}.${w[i][w[i].length-1]}: `+val;
+    dv.innerText=genVarNmFrmPth(w[i])+': '+val;
     rw.appendChild(dv);
 
     const btnDv=document.createElement('div');
@@ -968,22 +1137,6 @@ function mouseOutLstnFunc(e){
         <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
           <div id="${id}EdtTtl" style="display:flex; background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
           <div id="${id}EdtEntries" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
-            <div name="state.active.variable.xp" title="state.active.variable.xp" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >set v.xp</button>
-              <input type="text" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;" />
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" >x</button>
-            </div>
-            <div name="state.active.variable.money" title="state.active.variable.money" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;">
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >push v.money</button>
-              <input type="text" name="fltCubeEdtIdIndx.1" placeholder="indx" style="display:flex;width:fit-content;flex-grow:1;min-width:60px;width:60px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
-              <input type="number" name="fltCubeEdtIdVal.1" placeholder="test" style="display:flex;width:fit-content;flex-grow:1;min-width:100px;width:100px;border-radius:5px;padding:1px 2px;border-color:#AAAAAA;" />
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;text-wrap:nowrap;width:fit-content;min-width:4px;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit" >x</button>
-            </div>
-            <div name="state.active.variable.events" title="state.active.variable.events" style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-start; width:100%;">
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtId.1" >pop v.events</button>
-              <div style="display:flex; flex-grow:2;">&nbsp;</div>
-              <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;width:fit-content;text-wrap:nowrap;min-width:4px;" type="submit" name="fltCubeEdtIdDel.1" title="delete edit">x</button>
-            </div>
           </div>
         </div>
         <div id="${id}RghtPnlSpcr" style="display:flex; flex-grow:1;">
@@ -1087,7 +1240,10 @@ function mouseOutLstnFunc(e){
 
   //draw watches
   drwWtch();
-  
+ 
+  //draw edits
+  drwEdt();
+ 
   //filling out profile select
   fillPrflSlct(data,`${id}PrflSlct`); 
   
@@ -1242,11 +1398,25 @@ const tmpl={
   },
   'tmpData':{
     'watch':[
-      ['State','active','variables','money']
     ],
     'edit':{
-      'order':[],
-      'vars':[]
+      'order':[0],
+      'vars':[
+        {
+          "path": [
+            "State",
+            "active",
+            "variables",
+            "lastName"
+          ],
+          "type": "string",
+          "action": "edit",
+          "val": "Silk",
+          "indx": "",
+          "used": 0,
+          "ord": 0
+        }
+      ]
     },
     'bookmarks':{
       'order':[],
