@@ -631,12 +631,24 @@ function clckLstnFunc(e){
   //refreshing sc as default action
   sc=window.wrappedJSObject[data.global.startVar];
   XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
+  console.log("Clicked");
 
   switch(e.target.getAttribute('clickAction')){
 
     case 'watch':
-    const el=e.target
-    addWtch(el); 
+    addWtch(e.target); 
+    break;
+
+    case 'watchUp':
+    swpWtch(e.target,'up');
+    break;
+
+    case 'watchDwn':
+    swpWtch(e.target,'dwn');
+    break;
+
+    case 'watchDel':
+    delWtch(e.target);
     break;
 
     case 'updatePath':
@@ -800,14 +812,15 @@ function mouseOutLstnFunc(e){
     const dt=d||tmpData;
   const wtch=document.getElementById(id+'WatchEntries');
   wtch.innerHTML='';
-    for(const w of tmpData.watch){
+  const w=[ ...tmpData.watch ];
+    for(const i in w){
     const rw=document.createElement('div');
     rw.style.cssText="display:flex;flex-direction:row;text-wrap:nowrap;justify-content:space-between;align-items:center;padding:0px;margin:0px;box-sizing:border-box;";
     const dv=document.createElement('div');
     dv.style.cssText=`display:flex;flex-direction:row;text-wrap:nowrap;justify-content:flex-start;align-items:center;margin:0px 6px 0px 0px;padding:2px;border:0px;box-sizing:border-box;`;
-    dv.title=w.join('.');
-    const val=trvsPthInVar(sc,w,data);   
-    dv.innerText=`${w[w.length-2][0]}.${w[w.length-1]}: `+val;
+    dv.title=w[i].join('.');
+    const val=trvsPthInVar(sc,w[i],data);   
+    dv.innerText=`${w[i][w[i].length-2][0]}.${w[i][w[i].length-1]}: `+val;
     rw.appendChild(dv);
 
     const btnDv=document.createElement('div');
@@ -815,12 +828,23 @@ function mouseOutLstnFunc(e){
     const btnUp=document.createElement('button');
     btnUp.style.cssText="display:flex; justify-content:center; align-items:center; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px 0px 0px 3px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;width:18px;";
     btnUp.innerText='⏶';
+    btnUp.setAttribute('varWatchId',i);
+    btnUp.setAttribute('clickAction','watchUp');
+    
     const btnDwn=document.createElement('button');
     btnDwn.style.cssText="display:flex; justify-content:center; align-items:center; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px 0px 0px 3px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;width:18px;";
     btnDwn.innerText='⏷';
+    btnDwn.setAttribute('varWatchId',i);
+    btnDwn.setAttribute('clickAction','watchDwn');
+ 
+
     const del=document.createElement('button');
     del.style.cssText="display:flex; jutif-content:center; align-items:center; text-wrap:nowrap; width:fit-content; min-width:4px; text-shadow:none; margin:0px 0px 0px 3px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial;width:18px;";
     del.innerText='🗑';
+    del.setAttribute('varWatchId',i);
+    del.setAttribute('clickAction','watchDel');
+ 
+
     btnDv.appendChild(btnUp);
     btnDv.appendChild(btnDwn);
     btnDv.appendChild(del);
@@ -838,7 +862,6 @@ function mouseOutLstnFunc(e){
   *NOTE* ONLY WATCH SCALARS. NOT OBJECTS, NOT ARRAYS, SCALARS
   ---------------------------------------------------*/
   function addWtch(el){
-    console.log(tmpData);
   const varObj={
     'varName':null,
     'varPath':null,
@@ -848,7 +871,7 @@ function mouseOutLstnFunc(e){
     varObj[i]=el.getAttribute(i);
     }
 
-    if(varObj['varPath']&&typeof varObj['varPath']){
+    if(varObj['varPath']&&typeof varObj['varPath']=='string'){
     const arr=varObj['varPath'].split('.');
       if(arr[0]==data.global.startVar){
       arr.shift();
@@ -856,11 +879,54 @@ function mouseOutLstnFunc(e){
     arr.push(varObj.varName);
     tmpData.watch.push([ ...arr ]);
     }
-  console.log(tmpData);
   drwWtch();
   }
 
+  /*---------------------------------------------------
+  pre: drwWtch()
+  post: draw html
+  del to watch item
+  ---------------------------------------------------*/
+  function delWtch(el){
+  const varObj={
+    'varWatchId':null
+  };
+    for(const i of Object.keys(varObj)){
+    varObj[i]=el.getAttribute(i);
+    }
 
+    if(varObj['varWatchId']!=null){
+    tmpData.watch.splice(Number(varObj['varWatchId']),1);
+    }
+
+  drwWtch();
+  }
+
+  /*---------------------------------------------------
+  pre: drwWtch()
+  post: draw html
+  swap watch items up or down
+  ---------------------------------------------------*/
+  function swpWtch(el,dir=null){
+    if(!el||(dir!='up'&&dir!='dwn')){
+    return null;
+    }
+  const id=el.getAttribute('varWatchId');
+  const buff=tmpData.watch[id];
+  const max=tmpData.watch.length-1;
+  
+  let nid=dir=='up'?id-1:id+1;
+
+  //if id is out of range, do nothing
+    if(nid<0||nid>max){
+    return null;
+    }
+
+  tmpData.watch[id]=tmpData.watch[nid];
+  tmpData.watch[nid]=buff;
+
+  drwWtch();
+  } 
 
   /*---------------------------------------------------
   pre:
