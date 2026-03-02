@@ -751,25 +751,27 @@ pre: tmpData.edit.vars(optional)
 post: tmpData changed
 
 ----------------------------------------------*/
-function srtVars(vars==null){
+function srtVars(vars=null){
 const arr=vars||tmpData.edit.vars;
-let obj={}; //used=>id
+let lst=[];
   for(const i in arr){
-  obj[arr[i].used]=i;
+  lst.push({id:i, used:Number(arr[i].used)});
   }
-const lst=Object.keys(obj).sort((a,b)=>Number(b)-Number(a)); //used in order of largest to smallest
+lst.sort((a,b)=>Number(b.used)-Number(a.used)); //used in order of largest to smallest
 
 const order=[];
+console.log(arr);
+console.log(lst);
 
   for(const i in lst){
-  const id=obj[lst[i]];
-  order.push(id);
+  const id=lst[i].id;
+  order.push(Number(id));
   tmpData.edit.vars[id].ord=i; //writing order back to object for easier access/lookup
   }
 
 console.log(order);
 
-//tmpData.edit.order=order;
+tmpData.edit.order=order;
 }
 
 /*----------------------------------------------
@@ -823,15 +825,13 @@ vr.path=pthArr;
 vr.type=varObj['varType'];
 vr.action='edit';
 vr.val=valEl.value;
-vr.indx=indxEl.value;
+vr.indx=indxEl?indxEl.value:null;
 
-console.log(vr);
 const len=tmpData.edit.vars.push(vr);
-console.log(tmpData.edit);
-console.log(len);
 //temp
-tmpData.edit.order.push(len-1);
+//tmpData.edit.order.push(len-1);
 //sortEdts();
+srtVars();
 drwEdt();
 }
 
