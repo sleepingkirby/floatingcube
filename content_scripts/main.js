@@ -562,6 +562,7 @@ let vlDv=null;
     psh.setAttribute('varName',varNm);
     psh.setAttribute('varPath',path);
     psh.setAttribute('varType',varEvl.type);
+    psh.setAttribute('varAction','push');
     psh.setAttribute('clickAction','edit');
     psh.setAttribute('varIndexName',`${id}PshIndxNm`);
     psh.setAttribute('varValueName',`${id}PshValNm`);
@@ -600,6 +601,7 @@ let vlDv=null;
     pop.setAttribute('varName',varNm);
     pop.setAttribute('varPath',path);
     pop.setAttribute('varType',varEvl.type);
+    pop.setAttribute('varAction','del');
     pop.setAttribute('clickAction','edit');
     pop.setAttribute('varIndexName',`${id}PshIndxNm`);
 
@@ -672,6 +674,7 @@ btndv.style.cssText="display:flex; flex-direction:row; justify-content:flex-star
 
 let setBtn=null;
 let inpt=null; 
+let inptIndx=null; 
 let del=null;
 let opt=null;
 
@@ -720,6 +723,7 @@ let opt=null;
 
     inpt=document.createElement('select');
     inpt.style.cssText="display:flex;width:fit-content;min-width:60px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
+    inpt.name=`${id}EdtItmVal.${varId}`;
 
     opt=document.createElement('option');
     opt.value=true;
@@ -781,6 +785,51 @@ let opt=null;
     break;
 
     case 'object': //push value w/ index or del entry (via index) fro obj
+    setBtn=document.createElement('button');
+    setBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;";
+    setBtn.type='button';
+    setBtn.name=`${id}EdtItmId.${varId}`;
+    setBtn.setAttribute('varIndx',`${id}EdtItmIndx.${varId}`);
+    setBtn.setAttribute('varVal',`${id}EdtItmVal.${varId}`);
+      if(v.action=='push'){
+      setBtn.innerText='push to '+genVarNmFrmPth(v['path']);
+      }
+      else{
+      setBtn.innerText='delete from '+genVarNmFrmPth(v['path']);
+      }
+    setBtn.setAttribute('clickAction','edtItmSet');
+    btndv.appendChild(setBtn);
+
+    inptIndx=document.createElement('input');
+    inptIndx.type='text';
+    inptIndx.name=`${id}EdtItmIndx.${varId}`;
+    inptIndx.placeholder='index for object';
+    inptIndx.style.cssText="display:flex;width:fit-content;min-width:60px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
+    inptIndx.value=v.indx;
+    btndv.appendChild(inptIndx);
+   
+
+      if(v.action=='push'){
+      inpt=document.createElement('input');
+      inpt.type='text';
+      inpt.name=`${id}EdtItmVal.${varId}`;
+      inpt.placeholder='value to set';
+      inpt.style.cssText="display:flex;width:fit-content;min-width:60px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
+      inpt.value=v.val;
+      btndv.appendChild(inpt);
+      }
+
+    rw.appendChild(btndv);
+
+    delBtn=document.createElement('button');
+    delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
+    delBtn.type='submit';
+    delBtn.name=`${id}EdtItmDel.${varId}`;
+    delBtn.title='remove';
+    delBtn.innerText='🗑';
+    delBtn.setAttribute('clickAction','edtItmDel');
+    rw.appendChild(delBtn);
+
     return rw;
     break;
 
@@ -799,6 +848,7 @@ Draw edit rows
 function drwEdt(){
 const edt=tmpData.edit;
 const vars=edt.vars;
+console.log(vars);
 const drwEl=document.getElementById(`${id}EdtEntries`);
 drwEl.innerHTML='';
 
@@ -899,6 +949,44 @@ srtVars();
 drwEdt();
 }
 
+/*----------------------------------------------------------------------------
+pre: (global) tmpData, trvsPthInVar() (and what it needs)
+post:SugarCube updated
+takes the vars object, the values or index, and sets the value into SugarCube
+----------------------------------------------------------------------------*/
+function setEdt(el){
+  if(!el||!el.name){
+  return null;
+  }
+const plls={
+  'varindx':null,
+  'varval':null
+}
+
+const nm=el.name;
+const vrArr=nm.split('.');
+const id=Number(vrArr[vrArr.length-1]);
+const vr=tmpData.edit.vars[id];
+
+  for(const nm of Object.keys(plls)){
+  const ref=el.getAttribute(nm);
+
+  const refEl=document.getElementsByName(ref)[0];
+    if(refEl){
+    plls[nm]=refEl.value;
+    }
+  }
+
+
+console.log(`name:${el.name}, id: ${id}`);
+console.log(el);
+console.log(vr);
+console.log(plls);
+//const cur=trvsPthInVar(sc,vr.path,data);
+
+}
+
+
 /*----------------------------------------------
 pre: (global) data
 post:
@@ -930,6 +1018,10 @@ function clckLstnFunc(e){
 
     case 'edit':
     addEdt(e.target);
+    break;
+
+    case 'edtItmSet':
+    setEdt(e.target);
     break;
 
     case 'updatePath':
@@ -1524,7 +1616,7 @@ const tmpl={
             "pregArray"
           ],
           "type": "object",
-          "action": "push",
+          "action": "del",
           "val": "Silk",
           "indx": "",
           "used": 0,
