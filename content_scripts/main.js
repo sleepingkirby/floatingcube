@@ -664,38 +664,82 @@ const rw=document.createElement('div');
 rw.title=v.path.join('.')+', used: '+v.used;
 rw.name=v.path.join('.');
 rw.style.cssText="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;";
- 
+const btndv=document.createElement('div');
+btndv.style.cssText="display:flex; flex-direction:row; justify-content:flex-start; align-items:center;";
+
+let setBtn=null;
+let inpt=null; 
+let del=null;
+let opt=null;
+
   switch(v.type){
     case 'string':
     case 'number':
-      const setBtn=document.createElement('button');
-      setBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;";
-      setBtn.type='button';
-      setBtn.name=`${id}EdtItmId.${varId}`;
-      setBtn.setAttribute('varVal',`${id}EdtItmVal.${varId}`);
-      setBtn.innerText='set '+genVarNmFrmPth(v['path']);
-      rw.appendChild(setBtn);
+    setBtn=document.createElement('button');
+    setBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;";
+    setBtn.type='button';
+    setBtn.name=`${id}EdtItmId.${varId}`;
+    setBtn.setAttribute('varVal',`${id}EdtItmVal.${varId}`);
+    setBtn.innerText='set '+genVarNmFrmPth(v['path']);
+    setBtn.setAttribute('clickAction','edtItmSet');
+    btndv.appendChild(setBtn);
 
-      const inpt=document.createElement('input');
-      inpt.type=v.type=='number'?'number':'text';
-      inpt.name=`${id}EdtItmVal.${varId}`;
-      inpt.placeholder='value to set';
-      inpt.style.cssText="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
-      inpt.value=v.val;
-      rw.appendChild(inpt);
+    inpt=document.createElement('input');
+    inpt.type=v.type=='number'?'number':'text';
+    inpt.name=`${id}EdtItmVal.${varId}`;
+    inpt.placeholder='value to set';
+    inpt.style.cssText="display:flex;width:fit-content;min-width:60px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
+    inpt.value=v.val;
+    btndv.appendChild(inpt);
 
-      const delBtn=document.createElement('button');
-      delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
-      delBtn.type='submit';
-      delBtn.name=`${id}EdtItmDel.${varId}`;
-      delBtn.title='remove';
-      delBtn.innerText='🗑';
-      rw.appendChild(delBtn);
-      return rw;
+    rw.appendChild(btndv);
+
+    delBtn=document.createElement('button');
+    delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
+    delBtn.type='submit';
+    delBtn.name=`${id}EdtItmDel.${varId}`;
+    delBtn.title='remove';
+    delBtn.innerText='🗑';
+    delBtn.setAttribute('clickAction','edtItmDel');
+    rw.appendChild(delBtn);
+    return rw;
     break;
 
     case 'boolean':
-    rw.innerText="bool";
+    setBtn=document.createElement('button');
+    setBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;";
+    setBtn.type='button';
+    setBtn.name=`${id}EdtItmId.${varId}`;
+    setBtn.setAttribute('varVal',`${id}EdtItmVal.${varId}`);
+    setBtn.innerText='set '+genVarNmFrmPth(v['path']);
+    setBtn.setAttribute('clickAction','edtItmSet');
+    btndv.appendChild(setBtn);
+
+    inpt=document.createElement('select');
+    inpt.style.cssText="display:flex;width:fit-content;min-width:60px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
+
+    opt=document.createElement('option');
+    opt.value=true;
+    opt.innerText=true;
+    inpt.appendChild(opt);
+    opt=document.createElement('option');
+
+    opt.value=false;
+    opt.innerText=false;
+    inpt.appendChild(opt);
+    inpt.value=v.val;
+    btndv.appendChild(inpt);
+
+    rw.appendChild(btndv);
+
+    delBtn=document.createElement('button');
+    delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
+    delBtn.type='submit';
+    delBtn.name=`${id}EdtItmDel.${varId}`;
+    delBtn.title='remove';
+    delBtn.innerText='🗑';
+    delBtn.setAttribute('clickAction','edtItmDel');
+    rw.appendChild(delBtn);
     return rw;
     break;
 
@@ -1465,11 +1509,11 @@ const tmpl={
             "State",
             "active",
             "variables",
-            "money"
+            "unlock_princessGirl"
           ],
-          "type": "number",
+          "type": "boolean",
           "action": "edit",
-          "val": "9999",
+          "val": false,
           "indx": "",
           "used": 12,
           "ord": 0
