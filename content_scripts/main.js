@@ -489,6 +489,7 @@ let vlDv=null;
     psh.setAttribute('varName',varNm);
     psh.setAttribute('varPath',path);
     psh.setAttribute('varType',varEvl.type);
+    psh.setAttribute('varAction','push');
     psh.setAttribute('clickAction','edit');
     psh.setAttribute('varValueName',`${id}EdtValNm`);
 
@@ -501,6 +502,7 @@ let vlDv=null;
     pop.setAttribute('varName',varNm);
     pop.setAttribute('varPath',path);
     pop.setAttribute('varType',varEvl.type);
+    pop.setAttribute('varAction','pop');
     pop.setAttribute('clickAction','edit');
 
 
@@ -656,7 +658,8 @@ gen edit row buttons
   ]
   type: "string"
   used: 0
-  val: "Silk"
+  
+/val: "Silk"
   }
 ----------------------------------------------*/
 function genEdtBtns(v,varId){
@@ -744,12 +747,40 @@ let opt=null;
     break;
 
     case 'array': //push value or pop from array
-    rw.innerText="array";
+    const txt=v.action=='push'?'to':'from';
+    setBtn=document.createElement('button');
+    setBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;";
+    setBtn.type='button';
+    setBtn.name=`${id}EdtItmId.${varId}`;
+    setBtn.setAttribute('varVal',`${id}EdtItmVal.${varId}`);
+    setBtn.innerText=v.action+' '+txt+' '+genVarNmFrmPth(v['path']);
+    setBtn.setAttribute('clickAction','edtItmSet');
+    btndv.appendChild(setBtn);
+
+      if(v.action=='push'){
+      inpt=document.createElement('input');
+      inpt.type='text';
+      inpt.name=`${id}EdtItmVal.${varId}`;
+      inpt.placeholder='value to array';
+      inpt.style.cssText="display:flex;width:fit-content;min-width:60px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
+      inpt.value=v.val;
+      btndv.appendChild(inpt);
+      }
+
+    rw.appendChild(btndv);
+
+    delBtn=document.createElement('button');
+    delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
+    delBtn.type='submit';
+    delBtn.name=`${id}EdtItmDel.${varId}`;
+    delBtn.title='remove';
+    delBtn.innerText='🗑';
+    delBtn.setAttribute('clickAction','edtItmDel');
+    rw.appendChild(delBtn);
     return rw;
     break;
 
     case 'object': //push value w/ index or del entry (via index) fro obj
-    rw.innerText="object";
     return rw;
     break;
 
@@ -771,11 +802,7 @@ const vars=edt.vars;
 const drwEl=document.getElementById(`${id}EdtEntries`);
 drwEl.innerHTML='';
 
-console.log(edt.order);
-console.log(vars);
-
   for(const i of edt.order){
-  console.log(i);
   const v=vars[i];
   
   const btns=genEdtBtns(v,i);
@@ -800,16 +827,12 @@ let lst=[];
 lst.sort((a,b)=>Number(b.used)-Number(a.used)); //used in order of largest to smallest
 
 const order=[];
-console.log(arr);
-console.log(lst);
 
   for(const i in lst){
   const id=lst[i].id;
   order.push(Number(id));
   tmpData.edit.vars[id].ord=i; //writing order back to object for easier access/lookup
   }
-
-console.log(order);
 
 tmpData.edit.order=order;
 }
@@ -843,6 +866,7 @@ const varObj={
   'varPath':null,
   'varName':null,
   'varType':null,
+  'varAction':null,
   'varValueName':null,
   'varIndexName':null  
 }
@@ -863,7 +887,7 @@ const pthArr=varObj['varPath'].split('.');
 
 vr.path=pthArr;
 vr.type=varObj['varType'];
-vr.action='edit';
+vr.action=varObj['varAction'];
 vr.val=valEl.value;
 vr.indx=indxEl?indxEl.value:null;
 
@@ -1330,6 +1354,7 @@ function mouseOutLstnFunc(e){
   drwWtch();
  
   //draw edits
+  srtVars();
   drwEdt();
  
   //filling out profile select
@@ -1346,12 +1371,12 @@ function mouseOutLstnFunc(e){
   el.addEventListener('click',clckLstnFunc);
   el.addEventListener('mouseover',mouseOvrLstnFunc);
   el.addEventListener('mouseout',mouseOutLstnFunc);
-  //replace with someting better later
-  document.getElementById(`${id}VarFltr`).addEventListener('keypress',(e)=>{
-    if(e.key=="Enter"){
-    ppltVarDpth(path, data);
-    }
-  });
+    //replace with someting better later
+    document.getElementById(`${id}VarFltr`).addEventListener('keypress',(e)=>{
+      if(e.key=="Enter"){
+      ppltVarDpth(path, data);
+      }
+    });
  
   return el;
   }
@@ -1486,6 +1511,7 @@ const tmpl={
   },
   'tmpData':{
     'watch':[
+      ['State','active','variables','pregArray',0]
     ],
     'edit':{
       'order':[0,1],
@@ -1495,10 +1521,10 @@ const tmpl={
             "State",
             "active",
             "variables",
-            "lastName"
+            "pregArray"
           ],
-          "type": "string",
-          "action": "edit",
+          "type": "object",
+          "action": "push",
           "val": "Silk",
           "indx": "",
           "used": 0,
