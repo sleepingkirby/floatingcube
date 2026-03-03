@@ -661,12 +661,13 @@ gen edit row buttons
 ----------------------------------------------*/
 function genEdtBtns(v,varId){
 const rw=document.createElement('div');
-rw.title=v.path.join('.');
+rw.title=v.path.join('.')+', used: '+v.used;
 rw.name=v.path.join('.');
 rw.style.cssText="display:flex; flex-direction:row; justify-content:space-between; align-items:center; width:100%;";
  
   switch(v.type){
     case 'string':
+    case 'number':
       const setBtn=document.createElement('button');
       setBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;flex;width:fit-content;text-wrap:nowrap;min-width:4px;";
       setBtn.type='button';
@@ -676,7 +677,7 @@ rw.style.cssText="display:flex; flex-direction:row; justify-content:space-betwee
       rw.appendChild(setBtn);
 
       const inpt=document.createElement('input');
-      inpt.type='text';
+      inpt.type=v.type=='number'?'number':'text';
       inpt.name=`${id}EdtItmVal.${varId}`;
       inpt.placeholder='value to set';
       inpt.style.cssText="display:flex;width:fit-content;flex-grow:1;min-width:160px;width:160px;padding:1px 2px; border-radius:5px;border-color:#AAAAAA;";
@@ -691,11 +692,6 @@ rw.style.cssText="display:flex; flex-direction:row; justify-content:space-betwee
       delBtn.innerText='🗑';
       rw.appendChild(delBtn);
       return rw;
-    break;
-
-    case 'number':
-    rw.innerText="number";
-    return rw;
     break;
 
     case 'boolean':
@@ -1448,7 +1444,7 @@ const tmpl={
     'watch':[
     ],
     'edit':{
-      'order':[0],
+      'order':[0,1],
       'vars':[
         {
           "path": [
@@ -1462,6 +1458,20 @@ const tmpl={
           "val": "Silk",
           "indx": "",
           "used": 0,
+          "ord": 0
+        },
+        {
+          "path": [
+            "State",
+            "active",
+            "variables",
+            "money"
+          ],
+          "type": "number",
+          "action": "edit",
+          "val": "9999",
+          "indx": "",
+          "used": 12,
           "ord": 0
         }
       ]
