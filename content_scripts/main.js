@@ -1386,6 +1386,9 @@ function mouseOutLstnFunc(e){
   function drwWtch(d=null){
     const dt=d||tmpData;
   const wtch=document.getElementById(id+'WatchEntries');
+  if(!wtch){
+  return null;
+  }
   wtch.innerHTML='';
   const w=[ ...tmpData.watch ];
     for(const i in w){
@@ -1815,7 +1818,6 @@ const tmpl={
 }
 
   //document.addEventListener("mouseover", mouseOvrEvnt);
-  const glblVarNm='fltCubeVar';
   browser.storage.local.get().then(function(d){
     if(Object.keys(d).length<=0){
     logger('No settings found. Initializing with default.');
@@ -1852,7 +1854,20 @@ const tmpl={
   //adding on click event listener to the floating panel so that, on click,it can refresh values.
   logger(`Starting. Panel toggle is ${data.global.fltPnlTgl}`);
   const fPnl=floatPnlDt(d,data.global.fltPnlTgl);
-
   });
+
+  browser.runtime.onMessage.addListener((e)=>{
+    switch(e.action){
+      case 'floatPanel':
+      const el=document.getElementById(id);
+        if(e.msg.val&&!el){
+        floatPnlDt(data,data.global.fltPnlTgl);
+        }
+      break;
+      default:
+      break;
+    }
+  });
+
 })();
 
