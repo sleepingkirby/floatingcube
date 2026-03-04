@@ -240,17 +240,17 @@ let max=pthArr.length-1;
   if(max<0){
   return null;
   }
-  for(const i;i<max;i++){
-    if(indx==d.global.startVar){
+  for(let i=0;i<max;i++){
+    if(i==0&&pthArr[i]==d.global.startVar){
     continue;
     }
-    if(cur[indx]==undefined){
+    if(cur[pthArr[i]]==undefined){
     return undefined;
     }
-    cur=cur[indx];
+    cur=cur[pthArr[i]];
   }
 
-return {pos:cur,indx:indx};
+return {pos:cur,indx:pthArr[max]};
 }
 
 /*----------------------------------------------
@@ -889,7 +889,6 @@ Draw edit rows
 function drwEdt(){
 const edt=tmpData.edit;
 const vars=edt.vars;
-console.log(vars);
 const drwEl=document.getElementById(`${id}EdtEntries`);
 drwEl.innerHTML='';
 
@@ -1008,6 +1007,7 @@ const nm=el.name;
 const vrArr=nm.split('.');
 const id=Number(vrArr[vrArr.length-1]);
 const vr=tmpData.edit.vars[id];
+console.log(vr);
 
   for(const nm of Object.keys(plls)){
   const ref=el.getAttribute(nm);
@@ -1019,8 +1019,6 @@ const vr=tmpData.edit.vars[id];
   }
 
 let cur=getSetVarFrmPath(sc,vr.path,data);
-
-console.log(cur);
 
 //if undefined, the path didn're resolve or doesn't exist.
   if(cur==undefined||cur==null){
@@ -1074,6 +1072,9 @@ let val=null;
     break;
   }
 
+//up use count
+vr.val=plls.varval;
+vr.used++;
 return 0;
 }
 
@@ -1113,6 +1114,9 @@ function clckLstnFunc(e){
 
     case 'edtItmSet':
     setEdt(e.target);
+    srtVars();
+    drwEdt();
+    drwWtch();
     break;
 
     case 'updatePath':
