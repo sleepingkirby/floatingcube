@@ -207,7 +207,6 @@ function trvrsPthInVar(v=null, pthArr=null, d=null,){
 
 let cur=v;
   for(const indx of pthArr){
-    console.log(`path: ${indx}`);
     if(indx==d.global.startVar){
     continue;
     }
@@ -242,7 +241,6 @@ let max=pthArr.length-1;
   return null;
   }
   for(const i;i<max;i++){
-    console.log(`path: ${indx}`);
     if(indx==d.global.startVar){
     continue;
     }
@@ -252,7 +250,7 @@ let max=pthArr.length-1;
     cur=cur[indx];
   }
 
-return cur;
+return {pos:cur,indx:indx};
 }
 
 /*----------------------------------------------
@@ -1020,12 +1018,12 @@ const vr=tmpData.edit.vars[id];
     }
   }
 
-let cur=trvrsPthInVar(sc,vr.path,data);
+let cur=getSetVarFrmPath(sc,vr.path,data);
 
 console.log(cur);
 
 //if undefined, the path didn're resolve or doesn't exist.
-  if(cur==undefined){
+  if(cur==undefined||cur==null){
   return null;
   }
 
@@ -1044,22 +1042,18 @@ let val=null;
       else if(vr.type=='boolean'){
       val=Boolean(plls.varval);
       }
-    console.log(cur);
-    console.log(val);
-    cur=val;
-
-    console.log(cur);
+    cur.pos[cur.indx]=val;
     break;
 
     case 'array':
-      if(typeof cur!='array'){
+      if(typeof cur!='array'||cur.pos[cur.indx]){
       return null;
       }
       if(vr.action=='del'){
-      cur.pop();
+      cur.pos[cur.indx].pop();
       }
       else if(vr.action=='push'&&plls.varval!=undefined){
-      cur.push(vr.varval);
+      cur.pos[cur.indx].push(vr.varval);
       }
     break;
 
@@ -1068,10 +1062,10 @@ let val=null;
       return null;
       }
       if(vr.action=='del'){
-      delete cur[vr.varindx];
+      delete cur.pos[cur.indx][vr.varindx];
       }
       else if(vr.action=='action'){
-      cur[plls.varindx]=plls.varval;
+      cur.pos[cur.indx][plls.varindx]=plls.varval;
       }
     break;
 
