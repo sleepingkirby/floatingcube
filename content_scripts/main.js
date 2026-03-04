@@ -1078,6 +1078,26 @@ vr.used++;
 return 0;
 }
 
+/*----------------------------------------------
+pre: global tmpData variable
+post:
+----------------------------------------------*/
+function delEdt(el){
+  if(!el||!el.getAttribute('name')){
+  return null;
+  }
+
+const nm=el.name;
+const arr=nm.split('.');
+const id=arr[arr.length-1];
+const vr=tmpData.edit.vars;
+
+const ord=vr.ord;
+tmpData.edit.vars.splice(id,1);
+tmpData.edit.order.splice(ord,1);
+return vr;
+}
+
 
 /*----------------------------------------------
 pre: (global) data
@@ -1114,6 +1134,13 @@ function clckLstnFunc(e){
 
     case 'edtItmSet':
     setEdt(e.target);
+    srtVars();
+    drwEdt();
+    drwWtch();
+    break;
+
+    case 'edtItmDel':
+    delEdt(e.target);
     srtVars();
     drwEdt();
     drwWtch();
