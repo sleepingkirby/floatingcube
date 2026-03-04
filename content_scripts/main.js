@@ -1054,7 +1054,6 @@ let val=null;
       return null;
       }
       if(vr.action=='pop'){
-      console.log("<<<<<<<<<<<<<<<");
       cur.pos[cur.indx].pop();
       }
       else if(vr.action=='push'&&plls.varval!=undefined){
@@ -1063,13 +1062,21 @@ let val=null;
     break;
 
     case 'object':
+      console.log(cur);
+      console.log(Array.isArray(cur.pos[cur.indx]));
+      console.log(cur.pos[cur.indx]);
+      console.log(vr);
+      console.log(vr.action);
+      console.log(plls.varval);
+
+
       if(typeof cur.pos[cur.indx]!='object'||!cur.pos[cur.indx]){
       return null;
       }
       if(vr.action=='del'){
       delete cur.pos[cur.indx][vr.varindx];
       }
-      else if(vr.action=='action'){
+      else if(vr.action=='push'){
       cur.pos[cur.indx][plls.varindx]=plls.varval;
       }
     break;
