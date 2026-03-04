@@ -507,7 +507,6 @@ let vlDv=null;
 
 
     case 'array':
-    console.log(varEvl.type);
     inpt=document.createElement('input');
     inpt.value=varEvl.val;
     inpt.style.cssText="border:none;width:100%; padding:0px;";
@@ -1044,19 +1043,27 @@ let val=null;
     break;
 
     case 'array':
-      if(typeof cur!='array'||cur.pos[cur.indx]){
+      console.log(cur);
+      console.log(Array.isArray(cur.pos[cur.indx]));
+      console.log(cur.pos[cur.indx]);
+      console.log(vr);
+      console.log(vr.action);
+      console.log(plls.varval);
+
+      if(!Array.isArray(cur.pos[cur.indx])||!cur.pos[cur.indx]){
       return null;
       }
-      if(vr.action=='del'){
+      if(vr.action=='pop'){
+      console.log("<<<<<<<<<<<<<<<");
       cur.pos[cur.indx].pop();
       }
       else if(vr.action=='push'&&plls.varval!=undefined){
-      cur.pos[cur.indx].push(vr.varval);
+      cur.pos[cur.indx].push(plls.varval);
       }
     break;
 
     case 'object':
-      if(typeof cur!='object'){
+      if(typeof cur.pos[cur.indx]!='object'||!cur.pos[cur.indx]){
       return null;
       }
       if(vr.action=='del'){
@@ -1725,7 +1732,7 @@ const tmpl={
   },
   'tmpData':{
     'watch':[
-      ['State','active','variables','pregArray',0]
+      ['State','active','variables','loveArray',1]
     ],
     'edit':{
       'order':[0,1],
@@ -1735,25 +1742,11 @@ const tmpl={
             "State",
             "active",
             "variables",
-            "pregArray"
+            "loveArray"
           ],
-          "type": "object",
-          "action": "del",
-          "val": "Silk",
-          "indx": "",
-          "used": 0,
-          "ord": 0
-        },
-        {
-          "path": [
-            "State",
-            "active",
-            "variables",
-            "unlock_princessGirl"
-          ],
-          "type": "boolean",
-          "action": "edit",
-          "val": false,
+          "type": "array",
+          "action": "push",
+          "val": "Lucine",
           "indx": "",
           "used": 12,
           "ord": 0
