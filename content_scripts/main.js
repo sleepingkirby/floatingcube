@@ -200,7 +200,7 @@ post: none
 returns variable/"pointer" to where in variable (i.e. 
 SugarCube.State.active.variable.events) the pthArr takes you
 -------------------------------------------------------*/
-function trvsPthInVar(v=null, pthArr=null, d=null){
+function trvrsPthInVar(v=null, pthArr=null, d=null){
   if(!v||!pthArr||!d){
   return null;
   }
@@ -209,6 +209,9 @@ let cur=v
   for(const indx of pthArr){
     if(indx==d.global.startVar){
     continue;
+    }
+    if(cur[indx]==undefined){
+    return undefined;
     }
     cur=cur[indx];
   }
@@ -244,7 +247,7 @@ return false;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------
-pre: trvsPthInVar(), global sc var, global data var
+pre: trvrsPthInVar(), global sc var, global data var
 post: none
 evaluates the sugarcube variable defined by the path and var name. Determines if it's a leaf node or not.
 
@@ -268,7 +271,7 @@ const pthArr=spltPth(path);
   if(varNm){
     pthArr.push(varNm);
   }
-let cur=trvsPthInVar(sc,pthArr,data);
+let cur=trvrsPthInVar(sc,pthArr,data);
 
 
   //if cur is null. This is needed because typeof null returns object
@@ -955,7 +958,7 @@ drwEdt();
 }
 
 /*----------------------------------------------------------------------------
-pre: (global) tmpData, trvsPthInVar() (and what it needs)
+pre: (global) tmpData, trvrsPthInVar() (and what it needs)
 post:SugarCube updated
 takes the vars object, the values or index, and sets the value into SugarCube
 ----------------------------------------------------------------------------*/
@@ -964,8 +967,8 @@ function setEdt(el){
   return null;
   }
 const plls={
-  'varindx':null,
-  'varval':null
+  'varindx':undefined,
+  'varval':undefined
 }
 
 const nm=el.name;
@@ -982,15 +985,61 @@ const vr=tmpData.edit.vars[id];
     }
   }
 
+const cur=trvrsPthInVar(sc,vr.path,data);
 
-console.log(`name:${el.name}, id: ${id}`);
-console.log(el);
-console.log(vr);
-console.log(plls);
-  
+//if undefined, the path didn're resolve or doesn't exist.
+  if(cur==undefined){
+  return null;
+  }
 
-//const cur=trvsPthInVar(sc,vr.path,data);
+let val=null;
 
+  switch(vr.type){
+    case 'string':
+    case 'number':
+    case 'boolean':
+      if(vr.type=='string'){
+      val=String(plls.varval);
+      }
+      else if(vr.type=='number'){
+      val=Number(plls.varval);
+      }
+      else if(vr.type=='boolean'){
+      val=Boolean(plls.varval);
+      }
+    cur=val;
+    break;
+
+    case 'array':
+      if(typeof cur!='array'){
+      return null;
+      }
+      if(vr.action=='del'){
+      cur.pop();
+      }
+      else if(vr.action=='push'&&plls.varval!=undefined){
+      cur.push(vr.varval);
+      }
+    break;
+
+    case 'object':
+      if(typeof cur!='object'){
+      return null;
+      }
+      if(vr.action=='del'){
+      delete cur[vr.varindx];
+      }
+      else if(vr.action=='action'){
+      cur[plls.varindx]=plls.varval;
+      }
+    break;
+
+    default:
+    return null;
+    break;
+  }
+
+return 0;
 }
 
 
@@ -1117,8 +1166,8 @@ function mouseOutLstnFunc(e){
     }
   
   const pthArr=spltPth(path);
-  const cur=trvsPthInVar(sc, pthArr, d);
-  
+  const cur=trvrsPthInVar(sc, pthArr, d);
+ 
   let varArr=cur?Object.keys(cur):[];
   
   //filter
@@ -1199,7 +1248,7 @@ function mouseOutLstnFunc(e){
     const dv=document.createElement('div');
     dv.style.cssText=`display:flex;flex-direction:row;text-wrap:nowrap;justify-content:flex-start;align-items:center;margin:0px 6px 0px 0px;padding:2px;border:0px;box-sizing:border-box;`;
     dv.title=w[i].join('.');
-    const val=trvsPthInVar(sc,w[i],data);   
+    const val=trvrsPthInVar(sc,w[i],data);   
     dv.innerText=genVarNmFrmPth(w[i])+': '+val;
     rw.appendChild(dv);
 
