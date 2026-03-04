@@ -742,7 +742,7 @@ let opt=null;
 
     delBtn=document.createElement('button');
     delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
-    delBtn.type='submit';
+    delBtn.type='button';
     delBtn.name=`${id}EdtItmDel.${varId}`;
     delBtn.title='remove';
     delBtn.innerText='🗑';
@@ -781,7 +781,7 @@ let opt=null;
 
     delBtn=document.createElement('button');
     delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
-    delBtn.type='submit';
+    delBtn.type='button';
     delBtn.name=`${id}EdtItmDel.${varId}`;
     delBtn.title='remove';
     delBtn.innerText='🗑';
@@ -815,7 +815,7 @@ let opt=null;
 
     delBtn=document.createElement('button');
     delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
-    delBtn.type='submit';
+    delBtn.type='button';
     delBtn.name=`${id}EdtItmDel.${varId}`;
     delBtn.title='remove';
     delBtn.innerText='🗑';
@@ -863,7 +863,7 @@ let opt=null;
 
     delBtn=document.createElement('button');
     delBtn.style.cssText="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;min-width:4px;text-wrap:nowrap;width:fit-content;"
-    delBtn.type='submit';
+    delBtn.type='button';
     delBtn.name=`${id}EdtItmDel.${varId}`;
     delBtn.title='remove';
     delBtn.innerText='🗑';
@@ -1101,6 +1101,28 @@ return vr;
 /*----------------------------------------------
 pre: (global) data
 post:
+key press listener just for filtering
+----------------------------------------------*/
+function fltrVarsLstnFunc(e){
+  if(e.key=="Enter"){
+  ppltVarDpth(path, data);
+  }
+}
+
+/*----------------------------------------------
+pre: (global) data
+post:
+key press listener just for filtering
+----------------------------------------------*/
+function bodyClckLstnFunc(e){
+drwWtch();
+}
+
+
+
+/*----------------------------------------------
+pre: (global) data
+post:
 Click listener function for the float panel (or more)
 processes all clicks events
 ----------------------------------------------*/
@@ -1108,6 +1130,7 @@ function clckLstnFunc(e){
   //refreshing sc as default action
   sc=window.wrappedJSObject[data.global.startVar];
   XPCNativeWrapper(window.wrappedJSObject[data.global.startVar]);
+  let prflTtl=null;
 
   switch(e.target.getAttribute('clickAction')){
 
@@ -1148,6 +1171,10 @@ function clckLstnFunc(e){
     drwWtch();
     break;
 
+    case 'rfrshVarsLst':
+    ppltVarDpth(path, data);
+    break;
+
     case 'updatePath':
     const vl=e.target.getAttribute('varname');
       if(!vl){
@@ -1178,9 +1205,42 @@ function clckLstnFunc(e){
     ppltVarDpth(path, data);
     break;
 
+    case 'savePrfl':
+    //redraw profile select
+    //set profile select to current value
+    prflTtl=document.getElementById(`${id}PrflSave`).value;
+      if(!prflTtl||prflTtl==""){
+      return null;
+      }
+    data.profiles[prflTtl]=tmpData;
+      browser.storage.local.set(data).then((e)=>{
+      fillPrflSlct(data,`${id}PrflSlct`); 
+      const fl=document.getElementById(`${id}PrflSlct`);
+      fl.value=prflTtl; 
+      }); 
+    break;
+
+    case 'loadPrfl':
+    //refresh global data from storage.
+    //get profile name
+    //copy profile to tmpData
+      browser.storage.local.get().then((d)=>{
+      const fl=document.getElementById(`${id}PrflSlct`);
+      document.getElementById(`${id}PrflSave`).value=fl.value;
+      data=d;
+      tmpData=data.profiles[fl.value];
+
+      ppltPth(path,`${id}LftPnlPth`);//set current path
+      ppltVarDpth(path, data);//populate var list
+      document.getElementById(`${id}LftPnlBtns`).innerHTML='';//clears buttons
+      srtVars();
+      drwWtch();
+      drwEdt();
+      });
+    break;
+
     default:
     drwWtch();
-    ppltVarDpth(path, data);
     break;
   }
 }
@@ -1441,7 +1501,7 @@ function mouseOutLstnFunc(e){
       <div id="${id}LftPnl" class="leftPanel" style="flex-grow:4; flex-direction:column; align-items:stretch; overflow:hidden; transition: all 0.3s linear; max-width:500px; max-height:500px; resize:both; overflow: auto; padding: 0px 6px 16px 6px; width:180px;">
         <div style="display:flex; align-items:center; width:100%; min-width:100px; border:1px solid; border-radius:6px; box-sizing:border-box; overflow:hidden;">
           <input type="text" id="${id}VarFltr" name="varFltr" style="display:flex; border-radius:5px; flex-grow:1; border:none; min-width:100px; font-size:small;" placeholder="variable filter"/>
-          <div id="${id}VarFltrBtn" style="display:flex; cursor:pointer; margin:0px 6px 0px 6px;">🔎</div>
+          <div id="${id}VarFltrBtn" style="display:flex; cursor:pointer; margin:0px 6px 0px 6px;" clickAction="rfrshVarsLst">🔎</div>
         </div>
         <div style="align-items:center; width:100%; min-width:100px; padding:4px 2px 4px 2px; box-sizing:border-box; border-bottom:1px solid; font-size:smaller; display:flex; justify-content:flex-start; align-items:center; overflow:auto;" id="${id}LftPnlPth">
           State.active.variables
@@ -1471,9 +1531,10 @@ function mouseOutLstnFunc(e){
         </div>
         <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
           <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;">+</button>
-            <input type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:cener;align-items:center;" clickAction="savePrfl">save prfl</button>
+            <input id="${id}PrflSave" type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
           </div>
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="loadPrfl">load prfl</button>
           <select id="${id}PrflSlct" style="display:flex; border-color:#AAAAAA; border-radius:3px 3px 6px 3px; border-left:1px solid #AAAAAA; border-top:1px solid #AAAAAA; border-bottom:0px; border-right:0px; padding:1px 2px;">
             <option value="">none</option>
           </select>
@@ -1586,12 +1647,9 @@ function mouseOutLstnFunc(e){
   el.addEventListener('click',clckLstnFunc);
   el.addEventListener('mouseover',mouseOvrLstnFunc);
   el.addEventListener('mouseout',mouseOutLstnFunc);
-    //replace with someting better later
-    document.getElementById(`${id}VarFltr`).addEventListener('keypress',(e)=>{
-      if(e.key=="Enter"){
-      ppltVarDpth(path, data);
-      }
-    });
+  //replace with someting better later
+  document.getElementById(`${id}VarFltr`).addEventListener('keypress',fltrVarsLstnFunc);
+  document.body.addEventListener('click',bodyClckLstnFunc);
  
   return el;
   }
@@ -1725,27 +1783,10 @@ const tmpl={
   'ord':0
   },
   'tmpData':{
-    'watch':[
-      ['State','active','variables','loveArray',1]
-    ],
+    'watch':[],
     'edit':{
       'order':[0,1],
-      'vars':[
-        {
-          "path": [
-            "State",
-            "active",
-            "variables",
-            "loveArray"
-          ],
-          "type": "array",
-          "action": "push",
-          "val": "Lucine",
-          "indx": "",
-          "used": 12,
-          "ord": 0
-        }
-      ]
+      'vars':[]
     },
     'bookmarks':{
       'order':[],
@@ -1761,7 +1802,7 @@ const tmpl={
     logger('No settings found. Initializing with default.');
     d={ ...dfltStrg }
     }
-  
+
   data=d;//setting data for global use
   tmpData={ ...tmpl['tmpData'] }; //for when there's no profile
     if(!d.global.enabled){
