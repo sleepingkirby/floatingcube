@@ -1074,7 +1074,7 @@ let val=null;
       return null;
       }
       if(vr.action=='del'){
-      delete cur.pos[cur.indx][vr.varindx];
+      delete cur.pos[cur.indx][plls.varindx];
       }
       else if(vr.action=='push'){
       cur.pos[cur.indx][plls.varindx]=plls.varval;
