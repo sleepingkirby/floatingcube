@@ -119,10 +119,13 @@ const slct=document.getElementById(elId);
   return null;
   }
 
+  slct.innerHTML='';
+  const prfls=Object.keys(obj['profiles']);  
+  prfls.unshift("none");
 
-  for(const inx of Object.keys(obj['profiles'])){
+  for(const inx of prfls){
   const opt=document.createElement('option');
-  opt.value=inx;
+  opt.value=inx=="none"?"":inx;
   opt.innerText=inx;
   slct.appendChild(opt);
   }
@@ -1221,9 +1224,6 @@ function clckLstnFunc(e){
     break;
 
     case 'loadPrfl':
-    //refresh global data from storage.
-    //get profile name
-    //copy profile to tmpData
       browser.storage.local.get().then((d)=>{
       const fl=document.getElementById(`${id}PrflSlct`);
       document.getElementById(`${id}PrflSave`).value=fl.value;
@@ -1238,6 +1238,24 @@ function clckLstnFunc(e){
       drwEdt();
       });
     break;
+
+    case 'delPrfl':
+    //redraw profile select
+    //set profile select to current value
+    const prflSlct=document.getElementById(`${id}PrflSlct`);
+      if(!prflSlct||prflSlct.value==""){
+      return null;
+      }
+    delete data.profiles[prflSlct.value]
+      browser.storage.local.set(data).then((e)=>{
+      fillPrflSlct(data,`${id}PrflSlct`); 
+      const fl=document.getElementById(`${id}PrflSlct`);
+      fl.value=""; 
+      }); 
+
+    break;
+
+
 
     default:
     drwWtch();
@@ -1531,13 +1549,14 @@ function mouseOutLstnFunc(e){
         </div>
         <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
           <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:cener;align-items:center;" clickAction="savePrfl">save prfl</button>
+            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:cener;align-items:center;" clickAction="savePrfl">save</button>
             <input id="${id}PrflSave" type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
           </div>
-          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="loadPrfl">load prfl</button>
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="loadPrfl">load</button>
           <select id="${id}PrflSlct" style="display:flex; border-color:#AAAAAA; border-radius:3px 3px 6px 3px; border-left:1px solid #AAAAAA; border-top:1px solid #AAAAAA; border-bottom:0px; border-right:0px; padding:1px 2px;">
             <option value="">none</option>
           </select>
+          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="delPrfl">🗑</button>
         </div>
       </div>
     </div>`;
@@ -1560,7 +1579,7 @@ function mouseOutLstnFunc(e){
   
   
   el=document.createElement("div");
-  el.style.cssText="border-color:#AAAAAA;position:fixed;left:50vw;top:30vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.78;";
+  el.style.cssText="border-color:#AAAAAA;position:fixed;left:40vw;top:20vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.78;";
   el.id=id;
   el.draggable=true;
   
