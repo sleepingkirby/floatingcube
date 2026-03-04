@@ -1043,13 +1043,6 @@ let val=null;
     break;
 
     case 'array':
-      console.log(cur);
-      console.log(Array.isArray(cur.pos[cur.indx]));
-      console.log(cur.pos[cur.indx]);
-      console.log(vr);
-      console.log(vr.action);
-      console.log(plls.varval);
-
       if(!Array.isArray(cur.pos[cur.indx])||!cur.pos[cur.indx]){
       return null;
       }
@@ -1062,14 +1055,6 @@ let val=null;
     break;
 
     case 'object':
-      console.log(cur);
-      console.log(Array.isArray(cur.pos[cur.indx]));
-      console.log(cur.pos[cur.indx]);
-      console.log(vr);
-      console.log(vr.action);
-      console.log(plls.varval);
-
-
       if(typeof cur.pos[cur.indx]!='object'||!cur.pos[cur.indx]){
       return null;
       }
@@ -1127,15 +1112,18 @@ function clckLstnFunc(e){
   switch(e.target.getAttribute('clickAction')){
 
     case 'watch':
-    addWtch(e.target); 
+    addWtch(e.target);
+    drwWtch();
     break;
 
     case 'watchUp':
     swpWtch(e.target,'up');
+    drwWtch();
     break;
 
     case 'watchDwn':
     swpWtch(e.target,'dwn');
+    drwWtch();
     break;
 
     case 'watchDel':
@@ -1388,7 +1376,6 @@ function mouseOutLstnFunc(e){
     arr.push(varObj.varName);
     tmpData.watch.push([ ...arr ]);
     }
-  drwWtch();
   }
 
   /*---------------------------------------------------
@@ -1420,7 +1407,7 @@ function mouseOutLstnFunc(e){
     if(!el||(dir!='up'&&dir!='dwn')){
     return null;
     }
-  const id=el.getAttribute('varWatchId');
+  const id=Number(el.getAttribute('varWatchId'));
   const buff=tmpData.watch[id];
   const max=tmpData.watch.length-1;
   
@@ -1485,7 +1472,7 @@ function mouseOutLstnFunc(e){
         <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
           <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
             <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;">+</button>
-            <input type="text" placeholder="testing" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
+            <input type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
           </div>
           <select id="${id}PrflSlct" style="display:flex; border-color:#AAAAAA; border-radius:3px 3px 6px 3px; border-left:1px solid #AAAAAA; border-top:1px solid #AAAAAA; border-bottom:0px; border-right:0px; padding:1px 2px;">
             <option value="">none</option>
