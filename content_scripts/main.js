@@ -200,13 +200,14 @@ post: none
 returns variable/"pointer" to where in variable (i.e. 
 SugarCube.State.active.variable.events) the pthArr takes you
 -------------------------------------------------------*/
-function trvrsPthInVar(v=null, pthArr=null, d=null){
+function trvrsPthInVar(v=null, pthArr=null, d=null,){
   if(!v||!pthArr||!d){
   return null;
   }
 
-let cur=v
+let cur=v;
   for(const indx of pthArr){
+    console.log(`path: ${indx}`);
     if(indx==d.global.startVar){
     continue;
     }
@@ -219,6 +220,40 @@ let cur=v
 return cur;
 }
 
+/*-------------------------------------------------------
+pre: none
+post: none
+returns "pointer" to the variable to allow setting to the
+variable
+params:
+  v=global variable, for sugarcube,it's SugarCube
+  pth=Array of path to take
+  d=global data, for data.global.startVar to knoww where 
+    to start
+-------------------------------------------------------*/
+function getSetVarFrmPath(v=null, pthArr=null, d=null,){
+  if(!v||!pthArr||!d){
+  return null;
+  }
+
+let cur=v;
+let max=pthArr.length-1;
+  if(max<0){
+  return null;
+  }
+  for(const i;i<max;i++){
+    console.log(`path: ${indx}`);
+    if(indx==d.global.startVar){
+    continue;
+    }
+    if(cur[indx]==undefined){
+    return undefined;
+    }
+    cur=cur[indx];
+  }
+
+return cur;
+}
 
 /*----------------------------------------------
 pre: none 
@@ -985,7 +1020,9 @@ const vr=tmpData.edit.vars[id];
     }
   }
 
-const cur=trvrsPthInVar(sc,vr.path,data);
+let cur=trvrsPthInVar(sc,vr.path,data);
+
+console.log(cur);
 
 //if undefined, the path didn're resolve or doesn't exist.
   if(cur==undefined){
@@ -1007,7 +1044,11 @@ let val=null;
       else if(vr.type=='boolean'){
       val=Boolean(plls.varval);
       }
+    console.log(cur);
+    console.log(val);
     cur=val;
+
+    console.log(cur);
     break;
 
     case 'array':
