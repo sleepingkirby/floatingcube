@@ -246,7 +246,7 @@ return false;
 /*---------------------------------------------------------------------------------------------------------------------------
 pre: trvsPthInVar(), global sc var, global data var
 post: none
-evaluates the sugarcube variable. Returns one of
+evaluates the sugarcube variable defined by the path and var name. Determines if it's a leaf node or not.
 
 *NOTE* SugarCube.State and SugarCube.State.active get weird
 
@@ -300,6 +300,11 @@ let cur=trvsPthInVar(sc,pthArr,data);
     assume all are NOT leaf nodes until otherwise proven. And, to do that
     check ALL members of an object to see if its true. Then and only then
     is it actually true.
+    This means that empty objects are treated as NOT leaf nodes. This will cause problems/limit
+    the functuality, but it's a trade off I'm willing to accept as there are other varibales
+    within SugarCube that does this. And writing to/overwriting values there can cause issues.
+    i.e. THIS CANNOT BE SAFELY SOLVED WITH JUST AND IF EXCEPTION. MUST TREAT ALL OF IT LIKE
+    THIS FOR SAFETY'S SAKE.
     */
     let flag=null;
     
@@ -603,7 +608,7 @@ let vlDv=null;
     pop.setAttribute('varType',varEvl.type);
     pop.setAttribute('varAction','del');
     pop.setAttribute('clickAction','edit');
-    pop.setAttribute('varIndexName',`${id}PshIndxNm`);
+    pop.setAttribute('varIndexName',`${id}PopIndxNm`);
 
     btnDv=document.createElement('div');
     btnDv.style.cssText="display:flex;flex-direction:row;justify-content:flex-end;align-items:center;box-sizing:border-box;";
@@ -938,7 +943,7 @@ const pthArr=varObj['varPath'].split('.');
 vr.path=pthArr;
 vr.type=varObj['varType'];
 vr.action=varObj['varAction'];
-vr.val=valEl.value;
+vr.val=valEl?valEl.value:null;
 vr.indx=indxEl?indxEl.value:null;
 
 const len=tmpData.edit.vars.push(vr);
@@ -982,6 +987,8 @@ console.log(`name:${el.name}, id: ${id}`);
 console.log(el);
 console.log(vr);
 console.log(plls);
+  
+
 //const cur=trvsPthInVar(sc,vr.path,data);
 
 }
