@@ -16,6 +16,7 @@ var data=null;//floatingCube data
 var tmpData=null;
 var wht='#AAAAAA';
 var blck='black';
+var xWdth=window.screen.width;
 
 var cssText={
   'highlight':`display: flex; cursor: pointer; background-color:${wht}; color:${blck}; text-shadow:none;`,
@@ -1582,7 +1583,7 @@ function mouseOutLstnFunc(e){
   
   
   el=document.createElement("div");
-  el.style.cssText="border-color:#AAAAAA;position:fixed;left:40vw;top:20vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.78;";
+  el.style.cssText="border-color:#AAAAAA;position:fixed;left:40vw;top:20vh;border:1px solid;border-radius:6px;background-color:black;box-sizing:border-box;flex-direction:column;z-index:888888;display:flex;opacity:0.78;transition: all 0.3s linear;";
   el.id=id;
   el.draggable=true;
   
@@ -1596,12 +1597,31 @@ function mouseOutLstnFunc(e){
     const prevY=e.target.getAttribute("prevY");
     e.target.style.top=(pos.y+e.offsetY-prevY)+"px";
     e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
+
+    //recording max right x position for later minimization
+    const fltPnl=document.getElementById(id); 
+    const fpPos=fltPnl.getBoundingClientRect(); 
+    xWdth=fpPos.x+fpPos.width; 
+      if(xWdth>=window.screen.width){ 
+      xWdth=window.screen.width; 
+      } 
     });
   
   el.innerHTML=html;
   
   document.body.appendChild(el);
   
+  //trnadition for minimization
+  el.addEventListener('transitionend',(e)=>{
+    if(e.propertyName=='max-width'){
+    const el=document.getElementById(id);
+    const npos=el.getBoundingClientRect();
+    const newx=xWdth-npos.width;
+    el.style.left=newx+"px";
+    }
+  });
+
+
   //setting close button
   const cls=document.getElementById(`${id}ClsId`)
     if(cls){
@@ -1614,8 +1634,6 @@ function mouseOutLstnFunc(e){
   const min=document.getElementById(`${id}MinBtnId`);
     if(min){
       min.addEventListener('click',(e)=>{
-      const fltPnl=document.getElementById(id);
-      const pos=fltPnl.getBoundingClientRect();
       const lft=document.getElementById(`${id}LftPnl`);
       lft.style.maxWidth="0px";
       lft.style.maxHeight="0px";
@@ -1628,16 +1646,6 @@ function mouseOutLstnFunc(e){
       const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
       prflRow.style.maxWidth='0px';
       prflRow.style.maxHeight='0px';
-      const npos=fltPnl.getBoundingClientRect();
-      let rghtLmt=pos.x+pos.width;
-        if(rghtLmt>=window.screen.width){
-        rghtLmt=window.screen.width;
-        }
-      console.log(`pos.x: ${pos.x}`);
-      console.log(`rghtLmt: ${rghtLmt}`);
-      const newx=rghtLmt-npos.width;
-      console.log(`newx: ${newx}`);
-      fltPnl.style.left=newx;
       });
     }
   
