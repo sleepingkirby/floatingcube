@@ -1599,15 +1599,13 @@ function mouseOutLstnFunc(e){
     e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
 
     //recording max right x position for later minimization
-    const fltPnl=document.getElementById(id); 
-    const fpPos=fltPnl.getBoundingClientRect();
-    console.log(fpPos);
+    console.log(pos);
     console.log(e);
-    xWdth=fpPos.x+fpPos.width; 
+    xWdth=pos.x+e.offsetX-prevX+pos.width; 
       if(xWdth>=window.screen.width){ 
       xWdth=window.screen.width; 
       }
-    console.log(`xWdth: ${xWdth}, window.screen.width: ${window.screen.width}, floatPanel.x: ${fpPos.x}, floatPanel.width: ${fpPos.width}, `);
+    console.log(`xWdth: ${xWdth}, window.screen.width: ${window.screen.width}, floatPanel.x: ${pos.x}, floatPanel.width: ${pos.width}, `);
     });
   
   el.innerHTML=html;
@@ -1622,6 +1620,7 @@ function mouseOutLstnFunc(e){
     const newx=xWdth-npos.width;
     el.style.left=newx+"px";
     }
+  
   });
 
 
@@ -1649,6 +1648,17 @@ function mouseOutLstnFunc(e){
       const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
       prflRow.style.maxWidth='0px';
       prflRow.style.maxHeight='0px';
+
+      const fltPnl=document.getElementById(id);
+      const fpPos=fltPnl.getBoundingClientRect();
+      console.log(fpPos);
+      console.log(e);
+      xWdth=fpPos.x+fpPos.width; 
+        if(xWdth>=window.screen.width){ 
+        xWdth=window.screen.width;
+        } 
+      console.log(`xWdth: ${xWdth}, window.screen.width: ${window.screen.width}, floatPanel.x: ${fpPos.x}, floatPanel.width: ${fpPos.width}, `);
+
       });
     }
   
