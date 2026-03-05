@@ -1614,6 +1614,8 @@ function mouseOutLstnFunc(e){
   const min=document.getElementById(`${id}MinBtnId`);
     if(min){
       min.addEventListener('click',(e)=>{
+      const fltPnl=document.getElementById(id);
+      const pos=fltPnl.getBoundingClientRect();
       const lft=document.getElementById(`${id}LftPnl`);
       lft.style.maxWidth="0px";
       lft.style.maxHeight="0px";
@@ -1626,6 +1628,16 @@ function mouseOutLstnFunc(e){
       const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
       prflRow.style.maxWidth='0px';
       prflRow.style.maxHeight='0px';
+      const npos=fltPnl.getBoundingClientRect();
+      let rghtLmt=pos.x+pos.width;
+        if(rghtLmt>=window.screen.width){
+        rghtLmt=window.screen.width;
+        }
+      console.log(`pos.x: ${pos.x}`);
+      console.log(`rghtLmt: ${rghtLmt}`);
+      const newx=rghtLmt-npos.width;
+      console.log(`newx: ${newx}`);
+      fltPnl.style.left=newx;
       });
     }
   
