@@ -1651,14 +1651,10 @@ function mouseOutLstnFunc(e){
 
       const fltPnl=document.getElementById(id);
       const fpPos=fltPnl.getBoundingClientRect();
-      console.log(fpPos);
-      console.log(e);
       xWdth=fpPos.x+fpPos.width; 
         if(xWdth>=window.screen.width){ 
         xWdth=window.screen.width;
         } 
-      console.log(`xWdth: ${xWdth}, window.screen.width: ${window.screen.width}, floatPanel.x: ${fpPos.x}, floatPanel.width: ${fpPos.width}, `);
-
       });
     }
   
