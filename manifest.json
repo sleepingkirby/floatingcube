@@ -16,11 +16,15 @@
     "storage"
   ],
   "icons": {
-    "96": "icons/placeholder_bow96.png"
+    "64": "icons/logo96.png",
+    "96": "icons/logo_bow96.png",
+    "128": "icons/logo_bow96.png"
   },
   "browser_action": {
     "default_icon": {
-      "96":"icons/placeholder_bow96.png"
+      "64": "icons/logo96.png",
+      "96": "icons/logo_bow96.png",
+      "128": "icons/logo_bow96.png"
     },
     "default_title": "floating cube",
     "default_popup": "popup/menu.html"
