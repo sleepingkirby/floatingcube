@@ -1011,7 +1011,6 @@ const nm=el.name;
 const vrArr=nm.split('.');
 const id=Number(vrArr[vrArr.length-1]);
 const vr=tmpData.edit.vars[id];
-console.log(vr);
 
   for(const nm of Object.keys(plls)){
   const ref=el.getAttribute(nm);
@@ -1705,7 +1704,6 @@ function mouseOutLstnFunc(e){
   el.addEventListener('mouseover',mouseOvrLstnFunc);
   el.addEventListener('mouseout',mouseOutLstnFunc);
     el.addEventListener('mousedown',(e)=>{
-      console.log(e.tagname);
       switch(e.target.tagName){
         case 'BUTTON':
         e.target.style.backgroundColor=blck;
@@ -1716,7 +1714,6 @@ function mouseOutLstnFunc(e){
       }
     });
     el.addEventListener('mouseup',(e)=>{
-      console.log(e.tagname);
       switch(e.target.tagName){
         case 'BUTTON':
         e.target.style.backgroundColor=wht;
