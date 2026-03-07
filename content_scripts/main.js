@@ -17,6 +17,7 @@ var tmpData=null;
 var wht='#AAAAAA';
 var blck='black';
 var xWdth=window.screen.width;
+var fpState=1; //0=minimized, 1=maximized
 
 var cssText={
   'highlight':`display: flex; cursor: pointer; background-color:${wht}; color:${blck}; text-shadow:none;`,
@@ -1537,14 +1538,14 @@ function mouseOutLstnFunc(e){
           &nbsp;
         </div>
       </div>
-      <div class="${id}RghtPnl" style="display:flex; border-top:1px solid #AAAAAA;border-left:1px solid #AAAAAA;flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
+      <div class="${id}RghtPnl" style="display:flex; border-top:1px solid ${wht};border-left:1px solid ${wht};flex-direction:column; align-items:stretch; justify-content:flex-end; font-size:smaller; min-width:80px;">
         <div id="${id}Watch" style="flex-direction:column; display:flex; text-shadow:none;">
-          <div id="${id}WatchTtl" style="background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Watch</div>
+          <div id="${id}WatchTtl" style="background-color:${wht};color:${blck};padding:0px 3px 0px 3px;">Watch</div>
           <div id="${id}WatchEntries" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
           </div>
         </div>
         <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
-          <div id="${id}EdtTtl" style="display:flex; background-color:#AAAAAA;color:black;padding:0px 3px 0px 3px;">Edit</div>
+          <div id="${id}EdtTtl" style="display:flex; background-color:${wht};color:${blck};padding:0px 3px 0px 3px;">Edit</div>
           <div id="${id}EdtEntries" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
           </div>
         </div>
@@ -1553,14 +1554,14 @@ function mouseOutLstnFunc(e){
         </div>
         <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
           <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
-            <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:cener;align-items:center;" clickAction="savePrfl">save</button>
-            <input id="${id}PrflSave" type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:#AAAAAA; min-width:80px;"/>
+            <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:cener;align-items:center;" clickAction="savePrfl">save</button>
+            <input id="${id}PrflSave" type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:${wht}; min-width:80px;"/>
           </div>
-          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="loadPrfl">load</button>
-          <select id="${id}PrflSlct" style="display:flex; border-color:#AAAAAA; border-radius:3px 3px 6px 3px; border-left:1px solid #AAAAAA; border-top:1px solid #AAAAAA; border-bottom:0px; border-right:0px; padding:1px 2px;">
+          <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="loadPrfl">load</button>
+          <select id="${id}PrflSlct" style="display:flex; border-color:${wht}; border-radius:3px 3px 6px 3px; border-left:1px solid ${wht}; border-top:1px solid ${wht}; border-bottom:0px; border-right:0px; padding:1px 2px;">
             <option value="">none</option>
           </select>
-          <button style="margin:0px; display:flex; background-color:#AAAAAA; color:black; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="delPrfl">🗑</button>
+          <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="delPrfl">🗑</button>
         </div>
       </div>
     </div>`;
@@ -1599,13 +1600,10 @@ function mouseOutLstnFunc(e){
     e.target.style.left=(pos.x+e.offsetX-prevX)+"px";
 
     //recording max right x position for later minimization
-    console.log(pos);
-    console.log(e);
     xWdth=pos.x+e.offsetX-prevX+pos.width; 
       if(xWdth>=window.screen.width){ 
       xWdth=window.screen.width; 
       }
-    console.log(`xWdth: ${xWdth}, window.screen.width: ${window.screen.width}, floatPanel.x: ${pos.x}, floatPanel.width: ${pos.width}, `);
     });
   
   el.innerHTML=html;
@@ -1618,7 +1616,12 @@ function mouseOutLstnFunc(e){
     const el=document.getElementById(id);
     const npos=el.getBoundingClientRect();
     const newx=xWdth-npos.width;
-    el.style.left=newx+"px";
+      if(fpState==1){
+      el.style.left=newx+"px";
+      }
+      else{
+      el.style.left=window.screen.width-npos.width+"px";
+      }
     }
   
   });
@@ -1654,7 +1657,8 @@ function mouseOutLstnFunc(e){
       xWdth=fpPos.x+fpPos.width; 
         if(xWdth>=window.screen.width){ 
         xWdth=window.screen.width;
-        } 
+        }
+      fpState=0; 
       });
     }
   
@@ -1674,6 +1678,8 @@ function mouseOutLstnFunc(e){
       const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
       prflRow.style.maxWidth='300px';
       prflRow.style.maxHeight='80px';
+
+      fpState=1;
       });
     }
 
@@ -1698,6 +1704,28 @@ function mouseOutLstnFunc(e){
   el.addEventListener('click',clckLstnFunc);
   el.addEventListener('mouseover',mouseOvrLstnFunc);
   el.addEventListener('mouseout',mouseOutLstnFunc);
+    el.addEventListener('mousedown',(e)=>{
+      console.log(e.tagname);
+      switch(e.target.tagName){
+        case 'BUTTON':
+        e.target.style.backgroundColor=blck;
+        e.target.style.color=wht;
+        break;
+        default:
+        break;
+      }
+    });
+    el.addEventListener('mouseup',(e)=>{
+      console.log(e.tagname);
+      switch(e.target.tagName){
+        case 'BUTTON':
+        e.target.style.backgroundColor=wht;
+        e.target.style.color=blck;
+        break;
+        default:
+        break;
+      }
+    });
   //replace with someting better later
   document.getElementById(`${id}VarFltr`).addEventListener('keypress',fltrVarsLstnFunc);
   document.body.addEventListener('click',bodyClckLstnFunc);
