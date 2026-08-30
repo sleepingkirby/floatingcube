@@ -1918,6 +1918,13 @@ const tmpl={
         floatPnlDt(data,data.global.fltPnlTgl);
         }
       break;
+      case 'floatPanelResetPos':
+      const el=document.getElementById(id);
+      el.style.top=0px;
+      el.style.left=0px;
+      el.setAttribute("prevX", 0);
+      el.setAttribute("prevY", 0);
+      break;
       default:
       break;
     }

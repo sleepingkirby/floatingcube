@@ -31,6 +31,11 @@ var act=null;
         browser.tabs.sendMessage(tabs[0].id, {action: 'floatPanel', msg:{val:true}});
       });
       break;
+      case "floatResetPos":
+      browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+        browser.tabs.sendMessage(tabs[0].id, {action: 'floatPanelResetPos', msg:{val:true}});
+      });
+      break;
       default:
       break;
     }
