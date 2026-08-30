@@ -1543,7 +1543,7 @@ function mouseOutLstnFunc(e){
           <div id="${id}WatchEntries" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px;">
           </div>
         </div>
-        <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:hidden; transition:all 0.3s linear; box-sizing:border-box;">
+        <div id="${id}Edt" style="display:flex; text-shadow:none; flex-direction:column; max-height:600px; max-width:600px; overflow:auto; transition:all 0.3s linear; box-sizing:border-box;">
           <div id="${id}EdtTtl" style="display:flex; background-color:${wht};color:${blck};padding:0px 3px 0px 3px;">Edit</div>
           <div id="${id}EdtEntries" style="flex-direction:column; align-items:flex-start; justify-content:flex-start; padding:1px 2px; width:100%; box-sizing:border-box;">
           </div>
@@ -1551,12 +1551,12 @@ function mouseOutLstnFunc(e){
         <div id="${id}RghtPnlSpcr" style="display:flex; flex-grow:1;">
           &nbsp;
         </div>
-        <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:300px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
+        <div id="${id}RghtPnlPrflRow" style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; max-width:400px; max-height:80px; overflow:hidden; transition: all 0.3s linear; align-self:flex-end;">
           <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:center;">
-            <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:cener;align-items:center;" clickAction="savePrfl">save</button>
+            <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:36px;justify-content:cener;align-items:center;" clickAction="savePrfl">save</button>
             <input id="${id}PrflSave" type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:${wht}; min-width:80px;"/>
           </div>
-          <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="loadPrfl">load</button>
+          <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:36px;justify-content:center;align-items:center;" clickAction="loadPrfl">load</button>
           <select id="${id}PrflSlct" style="display:flex; border-color:${wht}; border-radius:3px 3px 6px 3px; border-left:1px solid ${wht}; border-top:1px solid ${wht}; border-bottom:0px; border-right:0px; padding:1px 2px;">
             <option value="">none</option>
           </select>
