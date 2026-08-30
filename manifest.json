@@ -6,7 +6,10 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "sleepingkirby@gmail.com-floatingcube",
-      "strict_min_version": "79.0"
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "permissions": [
@@ -16,15 +19,15 @@
     "storage"
   ],
   "icons": {
-    "64": "icons/logo96.png",
-    "96": "icons/logo_bow96.png",
-    "128": "icons/logo_bow96.png"
+    "64": "icons/logo64.png",
+    "96": "icons/logo96.png",
+    "128": "icons/logo128.png"
   },
   "browser_action": {
     "default_icon": {
-      "64": "icons/logo96.png",
-      "96": "icons/logo_bow96.png",
-      "128": "icons/logo_bow96.png"
+      "64": "icons/logo64.png",
+      "96": "icons/logo96.png",
+      "128": "icons/logo128.png"
     },
     "default_title": "floating cube",
     "default_popup": "popup/menu.html"
