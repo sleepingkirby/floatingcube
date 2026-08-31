@@ -7,6 +7,9 @@ max-width: 100vw;
 display: flex;
 justify-content: center;
 font-family: "DejaVu Sans", Arial, sans-serif;
+min-height: 100vh;
+margin: 0px;
+box-sizing: border-box;
 }
 
 a{
@@ -97,8 +100,17 @@ padding: 2px 8px 2px 8px;
 }
 
 .pageWrap{
-display: table;
+display: flex;
 width: 100%;
+border-width: 1px;
+border-style: solid;
+flex-direction: column;
+justify-content: flex-start;
+align-items: flex-start;
+box-sizing: border-box;
+height: calc(100vh - 12px);
+border-radius:6px;
+padding: 3px 6px;
 }
 
 .switch{
