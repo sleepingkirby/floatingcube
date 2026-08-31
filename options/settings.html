@@ -10,9 +10,15 @@
     <div class="pageWrap">
       <div id="msgPrfl">&nbsp;</div>
       <div id="prflSlct">
-        <select id=""></select>
-        <button id="prflSlctLoad">Load </button>
-        <button id="prflSlctDel">Delete</button>
+        <div id="prflSlctTtl">Profiles: </div>
+        <select id="prflSlctSlct" title="Profiles">
+          <option value="">None</option>
+        </select>
+        <button id="prflSlctLoad" title="Load profile into textbox" act="loadPrfl">Load</button>
+        <button id="prflSlctDel" title="Delete profile" act="delPrfl">Delete</button>
+      </div>
+      <div id="prflTxt">
+        <textarea id="prflJSON" placeholder="No profile code"></textarea>
       </div>
     </div>
   
