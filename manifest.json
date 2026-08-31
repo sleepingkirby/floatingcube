@@ -23,6 +23,7 @@
     "96": "icons/logo96.png",
     "128": "icons/logo128.png"
   },
+  "options_page": "options/settings.html",
   "browser_action": {
     "default_icon": {
       "64": "icons/logo64.png",

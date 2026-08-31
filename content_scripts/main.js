@@ -1911,19 +1911,18 @@ const tmpl={
   });
 
   browser.runtime.onMessage.addListener((e)=>{
+  let el=null;
     switch(e.action){
       case 'floatPanel':
-      const el=document.getElementById(id);
+      el=document.getElementById(id);
         if(e.msg.val&&!el){
         floatPnlDt(data,data.global.fltPnlTgl);
         }
       break;
       case 'floatPanelResetPos':
-      const el=document.getElementById(id);
-      el.style.top=0px;
-      el.style.left=0px;
-      el.setAttribute("prevX", 0);
-      el.setAttribute("prevY", 0);
+      el=document.getElementById(id);
+      el.style.top="20vh";
+      el.style.left="40vw";
       break;
       default:
       break;

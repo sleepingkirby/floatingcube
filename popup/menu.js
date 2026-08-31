@@ -36,6 +36,8 @@ var act=null;
         browser.tabs.sendMessage(tabs[0].id, {action: 'floatPanelResetPos', msg:{val:true}});
       });
       break;
+      case 'settingsPage':
+      browser.runtime.openOptionsPage(); 
       default:
       break;
     }
