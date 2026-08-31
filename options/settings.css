@@ -2,7 +2,7 @@
 body{
 background-color: #000000;
 color: #888888;
-padding: 6px 6px 6px 6px;
+padding: 32px 6px 6px 6px;
 max-width: 100vw;
 display: flex;
 justify-content: center;
@@ -98,19 +98,42 @@ justify-content: space-between;
 margin-bottom: 6px;
 }
 
-#prflSlct > button:last-child{
-margin-left: 64px;
+#prflSlct > button{
+margin-left:6px;
 }
 
 #prflSlct > select{
 margin-left:6px;
-margin-right:6px;
 }
 
 #prflTxt{
 width:100%;
+margin-bottom: 12px;
 }
 
+#prflJSON{
+height:400px;
+resize:vertical;
+}
+
+#prflLoad{
+width:100%;
+display:flex;
+flex-direction:row;
+justify-content:flex-end;
+align-items: center;
+}
+
+#prflLoad > button{
+margin-left:6px;
+}
+
+#prflLoad > input{
+height: 100%;
+box-sizing:border-box;
+padding-left:3px;
+resize:horizontal;
+}
 
 #msgPrfl, #msgImprt{
 margin: 0px 0px 0px 0px;

@@ -39,29 +39,55 @@ var el=document.getElementById('prflJSON');
     setMsg("Profile name does not exist");
     return 0;
     }
-  
-  el.textContent=JSON.stringify(e.profiles[prflNm]);
-  exportSettings(el.textContent, prflNm);
-  },onError);
+  el.value=JSON.stringify(e.profiles[prflNm]);
+  document.getElementById("prflImprtNm").value=prflNm;
+  exportSettings(el.value, prflNm);
+  },(err)=>{
+  console.log(err);
+  });
 }
 
-function imprtSttngs(elId, prflNm=""){
-var el=document.getElementById(elId);
-  if(el==false || !elId || elId=="" || !prflNm || prflNm==""){ 
-  return null;
-  }
-  
-  if(el.value==""){
-  setMsg("msgPrfl", "No settings found in textbox. Nothing to import.");
-  return false;
+/*------------------------------------------
+pre:
+post:
+------------------------------------------*/
+function imprtSttngs(){
+let el=document.getElementById('prflImprtNm');
+let prflNm=el.value;
+  if(!prflNm || prflNm==""){
+  setMsg(`No profile name provided`);
+  return 0;
   }
 
-var d=JSON.parse(el.value);
+let json='';
+  try{
+  json=JSON.parse(document.getElementById('prflJSON').value);
+  }
+  catch(err){
+  setMsg(`Parsing text box content into json failed.`);
+  console.log(`Parsing text box content into json failed.`);
+  return 0;
+  }
 
-  browser.storage.local.set(d).then((e)=>{
-  fillSlct("prflSlct", getURLVar());
-  setMsg("msgPrfl", "Settings imported.");
-  },onError);
+  browser.storage.local.get('profiles').then((d)=>{
+  let msg=`Create new profile with the profile name "${prflNm}"?`;
+    if(d.hasOwnProperty('profiles')&&d.profiles.hasOwnProperty(prflNm)){
+    msg=`Do you want to import the whats in the text box into the profile "${prflNm}"?`;
+    }
+
+    if(!confirm(msg)){
+    return 0; 
+    }
+
+  d.profiles[prflNm]=json;
+
+    browser.storage.local.set(d).then((e)=>{
+    setMsg(`Profile "${prflNm}" imported.`);
+    fillPrflSlct();
+    },(err)=>{
+    setMsg(err);
+    });
+  });
 return true;
 }
 
@@ -80,8 +106,10 @@ function fillPrflSlct(){
     }
 
   let opts='';
+  const imprtInpt=document.getElementById('prflImprtNm');
     for(let nm of prflKeys){
-    opts+=`<option value="${nm}">${nm}</option>`;
+    
+    opts+=imprtInpt.value==nm?`<option value="${nm}" selected>${nm}</option>`:`<option value="${nm}">${nm}</option>`;
     }
 
     if(opts!=''){
@@ -98,13 +126,12 @@ pre:
 post:
 ------------------------------------------*/
 function delPrfl(prflNm=''){
-console.log(prflNm);
   if(!prflNm || prflNm==''){
   setMsg(`No profile name was passed into delete profile.`);
   return 0;
   }
 
-  if(confirm(`Are you sure you want to delete the profile "${prflNm}".`)){
+  if(confirm(`Are you sure you want to delete the profile "${prflNm}"?`)){
     browser.storage.local.get('profiles').then((d)=>{
       if(!d.hasOwnProperty('profiles')||!d.profiles.hasOwnProperty(prflNm)){
       setMsg(`Profiles or frofile name "${prflNm}" does not exist to delete.`);
@@ -136,6 +163,9 @@ function startListen(){
       break;
       case 'delPrfl':
       delPrfl(el.value);
+      break;
+      case 'imprtPrfl':
+      imprtSttngs();
       break;
       default:
       break;
