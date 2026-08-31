@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "floatingcube",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Noting, finding, easy access to sugarcube variables for sugarcube pages.",
   "browser_specific_settings": {
     "gecko": {
