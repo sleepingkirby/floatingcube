@@ -1557,7 +1557,7 @@ function mouseOutLstnFunc(e){
             <input id="${id}PrflSave" type="text" placeholder="new profile name" style="box-sizing:border-box; border-bottom:0px; border-right:0px; width:100px; border-radius: 5px 5px 0px 0px; padding:1px 2px; border-color:${wht}; min-width:80px;"/>
           </div>
           <button title="Load Profile" style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:36px;justify-content:center;align-items:center;font-weight:1000;" clickAction="loadPrfl">🗁</button>
-          <select id="${id}PrflSlct" style="display:flex; border-color:${wht}; border-radius:3px 3px 6px 3px; border-left:1px solid ${wht}; border-top:1px solid ${wht}; border-bottom:0px; border-right:0px; padding:1px 2px;">
+          <select id="${id}PrflSlct" style="display:flex; border-color:${wht}; border-radius:3px 3px 6px 3px; border-left:1px solid ${wht}; border-top:1px solid ${wht}; border-bottom:0px; border-right:0px; padding:1px 2px;max-width:230px;">
             <option value="">none</option>
           </select>
           <button style="margin:0px; display:flex; background-color:${wht}; color:${blck}; padding:1px 4px; border-radius:6px; border:1px solid #666666; font-family:initial; text-shadow:none;box-sizing:border-box; border-bottom:0px; border-right:0px; border-radius:3px 3px 0px 3px;width:fit-content;text-wrap:nowrap;min-width:4px;justify-content:center;align-items:center;" clickAction="delPrfl">🗑</button>
