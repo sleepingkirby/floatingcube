@@ -774,8 +774,8 @@ let opt=null;
     opt.value=true;
     opt.innerText=true;
     inpt.appendChild(opt);
-    opt=document.createElement('option');
 
+    opt=document.createElement('option');
     opt.value=false;
     opt.innerText=false;
     inpt.appendChild(opt);
@@ -1041,7 +1041,7 @@ let val=null;
       val=Number(plls.varval);
       }
       else if(vr.type=='boolean'){
-      val=Boolean(plls.varval);
+      val=Boolean(plls.varval=="true");
       }
     cur.pos[cur.indx]=val;
     break;
@@ -1675,7 +1675,7 @@ function mouseOutLstnFunc(e){
       e.target.style.display='none';
       e.target.previousElementSibling.style.display="flex";
       const prflRow=document.getElementById(`${id}RghtPnlPrflRow`);
-      prflRow.style.maxWidth='300px';
+      prflRow.style.maxWidth='400px';
       prflRow.style.maxHeight='80px';
 
       fpState=1;
