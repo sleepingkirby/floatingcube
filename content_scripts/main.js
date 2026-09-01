@@ -1876,6 +1876,9 @@ const tmpl={
     if(Object.keys(d).length<=0){
     logger('No settings found. Initializing with default.');
     d={ ...dfltStrg }
+      browser.storage.local.set(d).then(()=>{
+      logger('Default set into storage');
+      });
     }
 
   data=d;//setting data for global use
