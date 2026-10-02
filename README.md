@@ -17,5 +17,3 @@ Features:
 -Saves your watches and edits within the browser into a profile.
 -Allows for multiple profiles
 -Import and export of profiles for backup purposes
-
-mozilla-site-verification=7e91ba74cfca441b8586e2a5ef3b1f81
